@@ -7,7 +7,7 @@ import sys
 
 def inventory():
     result = {"python": sys.version.split()[0], "tools": {}}
-    for name, flag in (("bili", "--version"), ("yt-dlp", "--version"), ("node", "--version"), ("ffmpeg", "-version"), ("codex", "--version")):
+    for name, flag in (("bili", "--version"), ("yt-dlp", "--version"), ("node", "--version"), ("ffmpeg", "-version"), ("ffprobe", "-version"), ("codex", "--version")):
         exe = shutil.which(name)
         item = {"installed": bool(exe), "version": None}
         if exe:

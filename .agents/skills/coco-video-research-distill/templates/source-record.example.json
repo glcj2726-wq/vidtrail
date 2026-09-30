@@ -1,0 +1,18 @@
+{
+  "platform": "<bilibili-or-youtube>",
+  "video_id": "<stable-platform-id>",
+  "part": 1,
+  "cid": null,
+  "collection_id": "<existing-or-dynamically-registered-id>",
+  "url": "<canonical-video-url>",
+  "current_stage": "acquiring",
+  "next_action": "<one-specific-next-action>",
+  "materials": [],
+  "attempts": [],
+  "cloud": {"provider": null, "parent_fid": null, "file_id": null, "upload_record_id": null, "actual_path": null},
+  "coverage": {"transcript": "not_verified", "visual": "not_verified", "timecodes": "unknown"},
+  "authorization_scope": "<reference-to-user-authorization-not-credentials>",
+  "note_path": null,
+  "consumer_project_backlink": null,
+  "pending": []
+}

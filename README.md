@@ -50,3 +50,27 @@ python .agents/skills/coco-video-research-distill/scripts/acquire.py --route yt-
 - 缺全文：只交付已核实范围；按用户已有授权选择转写或云端处理，不自动开启付费转写/夸克。私人课堂平台与特定定时任务授权不随技能移植。
 
 验证记录见 [docs/VALIDATION.md](docs/VALIDATION.md)。
+
+## 完整工作流入口
+
+首次配置读 [远端配置](.agents/skills/coco-video-research-distill/references/setup.md)，每次任务读 [流程与续接](.agents/skills/coco-video-research-distill/references/workflow.md)，平台选择读 [获取路线](.agents/skills/coco-video-research-distill/references/platforms.md)。只加载当前分支，不全量读所有参考。
+
+```text
+给链接/主题 → 选定视频身份与分集 → 知识库/云端记录查重
+  ├─ 已有完整正文 → 核验 → 全文理解与按需画面 → 笔记与来源登记
+  └─ 没有正文 → 平台字幕 → 实际可用浏览器正文
+       ├─ 正文取得 → 核验后蒸馏
+       └─ 没有正文 → 获取/复用视频
+            ├─ 已配置本地转写 → 全文与时间码 → 核验后蒸馏
+            ├─ 已授权夸克 → 上传验收 → 等待处理/人工导出
+            │                → ID精确取回文稿 → 核验后蒸馏
+            └─ 缺工具/材料/授权 → 保留当前状态与最少补充步骤
+```
+
+平台具体顺序以 platforms 为准：Bili23 的字幕任务可能先取得媒体；浏览器没有工具则跳过记录。每路线一次，不循环；不同目标（字幕/媒体）分别登记。成功就停止不必要的获取。用户只要下载时只验收视频，不强制全文蒸馏。
+
+- 无字幕与画面核验：[转写和画面](.agents/skills/coco-video-research-distill/references/transcription-visual.md)。不捆绑模型，不默认付费；无字幕不能拿简介代替。
+- 夸克完整操作：[上传、处理与精确取回](.agents/skills/coco-video-research-distill/references/quark.md)。提供官方安装源、会话参数、上传验收、断点续接与导出检索。summary/qa 与完整文稿导出分开，自动导出未验证，人工导出节点保留。
+- 单一来源记录：[字段模板](.agents/skills/coco-video-research-distill/templates/source-record.example.json)。映射目标库已有清单，不新建第二套总账；媒体、Cookie、实际材料回执不进分发仓库。
+
+当前只实现 B站/YouTube 工作流与单路线获取辅助。Bili23、浏览器、夸克、ASR是可选外部能力，需要执行端配置和验收；文档完整不等于这些服务已在服务器跑通。不包含私人课堂平台自动化。
