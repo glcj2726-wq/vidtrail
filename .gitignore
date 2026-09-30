@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+cookies*
+*credential*
+auth.json
+data/
+downloads/
+*.mp4
+*.mkv
+*.webm
+*.m4a
+*.sqlite*

@@ -1,0 +1,3 @@
+# Direct tool versions checked in the source environment; platform access is not guaranteed.
+bilibili-cli==0.6.2
+yt-dlp[default]==2026.8.19
