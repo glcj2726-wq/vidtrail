@@ -1,6 +1,6 @@
 # coco-video-research-distill
 
-给 Codex CLI 的可移植视频调研与蒸馏技能。输入 B站 / YouTube 链接、主题或已有文稿，取得正文、核验证据、围绕当前问题提炼可理解可照做的笔记，再接入使用者的知识库。
+给 Codex CLI 的可移植视频调研与蒸馏技能。输入 B站 / YouTube 链接、同济授权课时、主题或已有文稿，取得正文、核验证据、围绕当前问题提炼可理解可照做的笔记，再接入使用者的知识库。
 
 本仓库保存技能和工具辅助脚本；知识正文与原件由目标知识库保存。没有任何作者电脑路径、账号凭据、课程原件或特定自动任务授权。当前为私有仓库，发布公开版本须另行确认。
 
@@ -73,4 +73,10 @@ python .agents/skills/coco-video-research-distill/scripts/acquire.py --route yt-
 - 夸克完整操作：[上传、处理与精确取回](.agents/skills/coco-video-research-distill/references/quark.md)。提供官方安装源、会话参数、上传验收、断点续接与导出检索。summary/qa 与完整文稿导出分开，自动导出未验证，人工导出节点保留。
 - 单一来源记录：[字段模板](.agents/skills/coco-video-research-distill/templates/source-record.example.json)。映射目标库已有清单，不新建第二套总账；媒体、Cookie、实际材料回执不进分发仓库。
 
-当前只实现 B站/YouTube 工作流与单路线获取辅助。Bili23、浏览器、夸克、ASR是可选外部能力，需要执行端配置和验收；文档完整不等于这些服务已在服务器跑通。不包含私人课堂平台自动化。
+当前包含 B站/YouTube 工作流与单路线获取辅助，以及同济录课协作流程。Bili23、浏览器、同济CLI、夸克、ASR是外部能力，需要执行端配置和验收；文档完整不等于这些服务已在服务器跑通。不携带私人课堂的自动任务授权。
+
+## 同济录课流程
+
+[同济流程与仓颉方法衔接](.agents/skills/coco-video-research-distill/references/tongji.md)：Agent用 course_id + sub_id 查重，获取并下载精确课时，上传夸克且核验；用户生成并保存/导出完整文稿与所需总结；Agent按同课时身份取回，以文稿为主继续蒸馏、核画面、登记知识库。上传后等待，不重复下载/上传，不把summary响应当逐字文稿。
+
+普通课程笔记复用仓颉的全文理解、方法提取与证据核验；明确要求把材料做成可调用Skill时才执行已安装 cangjie-skill 的完整编译流程。本仓库只记录流程，不分发同济CLI、仓颉技能、登录缓存或课程原件；这些能力必须在执行端实际存在。acquire.py没有同济下载路由。

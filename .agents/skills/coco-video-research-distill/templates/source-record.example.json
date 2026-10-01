@@ -1,5 +1,7 @@
 {
-  "platform": "<bilibili-or-youtube>",
+  "platform": "<bilibili-or-youtube-or-tongji>",
+  "course_id": null,
+  "sub_id": null,
   "video_id": "<stable-platform-id>",
   "part": 1,
   "cid": null,
