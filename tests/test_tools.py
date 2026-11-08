@@ -16,7 +16,7 @@ def load(name, path):
     return module
 
 
-acq = load("acquire", ROOT / ".agents/skills/coco-video-research-distill/scripts/acquire.py")
+acq = load("acquire", ROOT / ".agents/skills/vidtrail/scripts/acquire.py")
 installer = load("install_skill", ROOT / "scripts/install_skill.py")
 
 
@@ -57,7 +57,7 @@ class ToolTests(unittest.TestCase):
 
     def test_install_preserves_existing_skill(self):
         with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory) / "coco-video-research-distill"
+            target = Path(directory) / "vidtrail"
             target.mkdir()
             (target / "keep.txt").write_text("keep", encoding="utf-8")
             with self.assertRaises(FileExistsError):

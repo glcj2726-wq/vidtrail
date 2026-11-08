@@ -1,82 +1,62 @@
-# coco-video-research-distill
+# VidTrail · 观迹
 
-给 Codex CLI 的可移植视频调研与蒸馏技能。输入 B站 / YouTube 链接、同济授权课时、主题或已有文稿，取得正文、核验证据、围绕当前问题提炼可理解可照做的笔记，再接入使用者的知识库。
+[中文说明](README.zh-CN.md)
 
-本仓库保存技能和工具辅助脚本；知识正文与原件由目标知识库保存。没有任何作者电脑路径、账号凭据、课程原件或特定自动任务授权。当前为私有仓库，发布公开版本须另行确认。
+An Agent Skill for finding relevant Bilibili and YouTube videos, understanding their available full content, and turning it into readable learning notes or a faithful explanation of the creator's workflow.
 
-## 远端开始使用
+**v0.1.0 preview — private development repository.** The portable workflow has offline checks and existing-material replays; authenticated platform access and optional integrations depend on the execution environment. Final independent release review remains pending.
+
+## What it does
+
+- Discover and compare videos for a task, or work directly from a link/transcript. Candidate-only requests stop after candidates.
+- Reuse existing materials before acquisition. Read all available text for full-video distillation; inspect relevant visuals for exact code, settings and demonstrated results.
+- Write coherent learning notes explaining a problem through the creator's example, or preserve workflow inputs, dependencies, actions, intermediate outputs, checks and gaps.
+- Trace conclusions to source evidence, distinguish claims/observations/inference, and label incomplete results.
+- Deliver where the user or current project chooses. Reply in the requested language, otherwise the conversation language. English skill instructions support Chinese outputs.
+
+It explains the creator's procedure; execution, deployment and installation of that procedure are separate tasks. No fixed knowledge-base structure, private classroom flow, bundled tutoring skill, mandatory Quark/Notion service, or automatic paid transcription.
+
+## Get started
+
+Python 3.10+ is required. Clone into a location you choose:
 
 ```sh
-gh repo clone glcj2726-wq/coco-video-research-distill
-cd coco-video-research-distill
+git clone https://github.com/glcj2726-wq/vidtrail.git
+cd vidtrail
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
 python scripts/doctor.py
+python scripts/install_skill.py --project /absolute/path/to/your-project
 ```
 
-Windows 使用 `py -m venv .venv`、`.venv\Scripts\Activate.ps1`。Python 需要 3.10+。完整 YouTube 支持还需 Node 22+；视频合并需系统安装 ffmpeg。脚本不会自动安装系统软件、登录或启用收费服务。
+Windows: `py -m venv .venv`, then `.venv\Scripts\Activate.ps1`. Installs need your authorization and network access; the commands above are instructions, not actions the skill runs automatically. The doctor checks command presence/version, not accounts or platform reachability. yt-dlp JS support follows its current [EJS requirements](https://github.com/yt-dlp/yt-dlp/wiki/EJS); media merging/extraction needs ffmpeg/ffprobe.
 
-在本仓库启动 Codex，会发现 `.agents/skills/coco-video-research-distill`。在知识库里使用时，把技能安装到那个仓库：
+The installer links `.agents/skills/vidtrail` into the chosen project's `.agents/skills`; `--skills-dir` selects an explicit skill directory. `--copy` makes a standalone copy instead of a symlink. Existing destinations are preserved. On Windows without symlink privileges (WinError 1314), rerun with `--copy`; elevation or system configuration changes are unnecessary. Updating a linked checkout updates the link; copies need deliberate replacement. Restart/open a new Codex task as needed and explicitly invoke `$vidtrail`. Host discovery beyond the tested packaging is environment-dependent.
+
+## Example requests
+
+> Use $vidtrail to find a few practical tutorials about building an agent workflow. Compare candidates only; do not download or distill them yet.
+
+> Use $vidtrail with this video link. Explain the creator's workflow, including inputs, dependencies, intermediate outputs and missing details. Save it in this project's existing notes location.
+
+> 用 $vidtrail 阅读这份已有字幕，写成中文学习笔记。沿用作者的例子，讲清概念之间的联系，注明哪些画面还没核对。
+
+## Acquisition helper
+
+Use a material directory **outside this repository**. Only run a route that is appropriate and authorized:
 
 ```sh
-python scripts/install_skill.py --project /absolute/path/to/your-knowledge-repo
+python .agents/skills/vidtrail/scripts/acquire.py --route bili --url 'https://www.bilibili.com/video/BV1CMMh62EVA/' --mode subtitles --data-root /absolute/path/to/materials
+python .agents/skills/vidtrail/scripts/acquire.py --route yt-dlp --url 'https://www.youtube.com/watch?v=3UgXWMQtB8E' --mode subtitles --data-root /absolute/path/to/materials
 ```
 
-安装使用指向本仓库的符号链接，`git pull --ff-only` 更新本仓库后技能随之更新；已有同名技能时停止，不覆盖。也可以用 `--skills-dir` 指定自己的 Codex 技能目录。重启/新开 Codex 任务，查看 `/skills` 并显式调用 `$coco-video-research-distill`。仓库内技能发现路径依据 [Codex 官方文档](https://learn.chatgpt.com/docs/build-skills)。
+These are invocation examples, not claims those sources were fetched in this release. The helper makes one acquisition attempt and retains receipts/hashes; it does not generate notes, provide ASR, control a browser, upload, or implement the creator's workflow. `acquired` means files obtained, not text verified. Exit codes: 0 acquired; 1 pre-acquisition stop; 2 failed/unavailable/invalidated; 3 partial. Hash-valid partial subtitles can be reused without another platform call. See [Platforms](.agents/skills/vidtrail/references/platforms.md).
 
-把这段话交给远端 Codex：
+## Boundaries and verification
 
-> 读取本仓库 AGENTS.md、README.md 和视频技能。先执行 doctor 检查实际工具；按目标知识库规则配置原件、临时视频和笔记位置。处理我给的 B站/YouTube 链接，查重后获取全文，核对来源与覆盖范围，再蒸馏并更新现有知识库；不能仅看标题/简介。缺工具或字幕时报告具体缺口，复用已有尝试，不反复重跑。安装命令不等于平台实测通过。
+Bilibili CLI subtitles support only part 1 in the pinned baseline; never substitute it for another part. Stock bili search lacks the maintainer's enhanced sorting/date/duration patch. Browser control, Bili23, platform credentials and transcription are host-provided optional capabilities. Cookies may fail after expiry or a network change. GitHub login is unrelated to platform login.
 
-## 获取示例
+Quark and Notion are optional. No transcription engine/model is bundled. With unavailable text or important visuals, deliver a limited result and name the gap rather than inventing steps. No universal claim of fresh-machine or anonymous VPS platform success is made.
 
-在虚拟环境已激活的 shell 中运行，数据位置由使用者指定，不能是本仓库内部：
-
-```sh
-python .agents/skills/coco-video-research-distill/scripts/acquire.py --route bili --url https://www.bilibili.com/video/BV1CMMh62EVA/ --mode subtitles --data-root /absolute/path/to/materials
-python .agents/skills/coco-video-research-distill/scripts/acquire.py --route yt-dlp --url 'https://www.youtube.com/watch?v=3UgXWMQtB8E' --mode subtitles --data-root /absolute/path/to/materials
-# 明确需要下载视频时使用 media；完整高清需要 ffmpeg 与平台账号权限。
-python .agents/skills/coco-video-research-distill/scripts/acquire.py --route yt-dlp --url 'https://www.youtube.com/watch?v=3UgXWMQtB8E' --mode media --data-root /absolute/path/to/materials
-```
-
-脚本只做一次获取并登记原件、哈希和结果；`acquired` 表示文件取得，正文仍须由 Agent 核验后才能记 `ready`。脚本不会生成总结、上传、删除、提交 Git 或自动切换工具。路线由技能明确选择。
-
-## 能力与限制
-
-- B站：`bili search` 发现；`bili video` 取第一分集字幕；其他分集须核对 cid/分集，不能把首集字幕当成目标集。Bili23 MCP 可用时复用一个任务；无 MCP 的服务器可用 yt-dlp 一次下载媒体，须明确这是服务器替代路线。
-- YouTube：yt-dlp 一次失败转已连接 Chrome；浏览器插件确实暴露接口时才调用 `exportYouTubeTranscript()`。Chrome 不可用时内置浏览器试一次。无浏览器工具的 CLI 不具有桌面插件能力。
-- 登录：GitHub 登录只用于克隆。本地凭据可经用户授权用 SSH 单独配置到服务器，具体位置见平台参考；Cookie 在另一网络环境可能失效，不能保证永远免登录。
-- 缺全文：只交付已核实范围；按用户已有授权选择转写或云端处理，不自动开启付费转写/夸克。私人课堂平台与特定定时任务授权不随技能移植。
-
-验证记录见 [docs/VALIDATION.md](docs/VALIDATION.md)。
-
-## 完整工作流入口
-
-首次配置读 [远端配置](.agents/skills/coco-video-research-distill/references/setup.md)，每次任务读 [流程与续接](.agents/skills/coco-video-research-distill/references/workflow.md)，平台选择读 [获取路线](.agents/skills/coco-video-research-distill/references/platforms.md)。只加载当前分支，不全量读所有参考。
-
-```text
-给链接/主题 → 选定视频身份与分集 → 知识库/云端记录查重
-  ├─ 已有完整正文 → 核验 → 全文理解与按需画面 → 笔记与来源登记
-  └─ 没有正文 → 平台字幕 → 实际可用浏览器正文
-       ├─ 正文取得 → 核验后蒸馏
-       └─ 没有正文 → 获取/复用视频
-            ├─ 已配置本地转写 → 全文与时间码 → 核验后蒸馏
-            ├─ 已授权夸克 → 上传验收 → 等待处理/人工导出
-            │                → ID精确取回文稿 → 核验后蒸馏
-            └─ 缺工具/材料/授权 → 保留当前状态与最少补充步骤
-```
-
-平台具体顺序以 platforms 为准：Bili23 的字幕任务可能先取得媒体；浏览器没有工具则跳过记录。每路线一次，不循环；不同目标（字幕/媒体）分别登记。成功就停止不必要的获取。用户只要下载时只验收视频，不强制全文蒸馏。
-
-- 无字幕与画面核验：[转写和画面](.agents/skills/coco-video-research-distill/references/transcription-visual.md)。不捆绑模型，不默认付费；无字幕不能拿简介代替。
-- 夸克完整操作：[上传、处理与精确取回](.agents/skills/coco-video-research-distill/references/quark.md)。提供官方安装源、会话参数、上传验收、断点续接与导出检索。summary/qa 与完整文稿导出分开，自动导出未验证，人工导出节点保留。
-- 单一来源记录：[字段模板](.agents/skills/coco-video-research-distill/templates/source-record.example.json)。映射目标库已有清单，不新建第二套总账；媒体、Cookie、实际材料回执不进分发仓库。
-
-当前包含 B站/YouTube 工作流与单路线获取辅助，以及同济录课协作流程。Bili23、浏览器、同济CLI、夸克、ASR是外部能力，需要执行端配置和验收；文档完整不等于这些服务已在服务器跑通。不携带私人课堂的自动任务授权。
-
-## 同济录课流程
-
-[同济流程与仓颉方法衔接](.agents/skills/coco-video-research-distill/references/tongji.md)：Agent用 course_id + sub_id 查重，获取并下载精确课时，上传夸克且核验；用户生成并保存/导出完整文稿与所需总结；Agent按同课时身份取回，以文稿为主继续蒸馏、核画面、登记知识库。上传后等待，不重复下载/上传，不把summary响应当逐字文稿。
-
-普通课程笔记复用仓颉的全文理解、方法提取与证据核验；明确要求把材料做成可调用Skill时才执行已安装 cangjie-skill 的完整编译流程。本仓库只记录流程，不分发同济CLI、仓颉技能、登录缓存或课程原件；这些能力必须在执行端实际存在。acquire.py没有同济下载路由。
+See [verification](docs/VALIDATION.md), [method attribution](ATTRIBUTION.md), and [the full skill](.agents/skills/vidtrail/SKILL.md). Source and documentation are MIT licensed; linked projects and source videos retain their own terms. Final public-release review is a separate next step.

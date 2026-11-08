@@ -13,3 +13,10 @@ downloads/
 *.webm
 *.m4a
 *.sqlite*
+# Private execution materials and local collaboration records
+/claude/
+/input/
+/deliverables/
+*.zip
+*.patch
+*.log

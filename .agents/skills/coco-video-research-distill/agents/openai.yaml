@@ -1,6 +1,0 @@
-interface:
-  display_name: "视频调研与蒸馏"
-  short_description: "获取视频正文、核验证据并提炼学习或方法笔记"
-  default_prompt: "使用 $coco-video-research-distill 处理给定视频，复用已有材料，交付有来源的笔记和真实缺口。"
-policy:
-  allow_implicit_invocation: true

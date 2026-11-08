@@ -43,3 +43,41 @@ Bili23官方页面本轮抓取超时；连接指导保留已知默认地址，�
 命令示例对照维护端实际Tongji脚本参数定义；list-replays只读已缓存会话，download-video可能认证回退，未把no-workspace-prompt误写为no-login。不捆绑脚本、不宣称上游同名工具或目标服务器一定支持，不继承本机自动任务与删除例外。本轮未登录、下载、上传录课或制作课程笔记；只更新分发流程文档。
 
 本轮检查：5项既有测试通过，Skill格式验证、Markdown内部链接、JSON模板和个人本机路径扫描通过。同济路线为流程文档核对，不等于服务器端到端实测通过。
+
+## 获取修复（2026-11-06）
+
+修改 acquire.py：读取 bilibili-cli 0.6.2 真实信封 `data.subtitle`，保留无信封的顶层 `subtitle` 旧响应；缺失、null 或畸形的 payload/data/subtitle 不再崩溃，回执记录 `diagnostic`。数据目录边界改为：源码检出（含其中的 `scripts/install_skill.py` 指向本技能）排除整个仓库；复制安装只排除技能目录本身，不排除家目录或目标知识库；符号链接安装解析回源码检出。yt-dlp 字幕参数只在 subtitles 模式出现，media 模式不再请求字幕。
+
+字幕模式命令失败（非零退出或超时）但已有非空字幕文件时记 `partial`：保留文件与哈希，写入 `usable_files` 和 `failure`，`content_verification` 仍为 `not_performed`。partial 不是 acquired，也不代表正文已核验。media 模式非零退出仍记 failed，因为此时的 mp4 可能只是未合并的单路流。
+
+CLI 退出码有一处窄幅变更：partial 从 2 改为新增的 3；0（acquired）、1（获取前停止）、2（failed/unavailable/invalidated）含义不变，`--help` 已列出。复用规则：partial 且哈希一致时直接复用、不运行工具、退出 3；哈希变化记 invalidated、退出 2；只有显式 `--retry-reason` 才再运行一次，没有自动重试；重试后的回执用 `prior_partial` 保留原文件和哈希。
+
+本轮验证结果：`python -m unittest discover -s tests` 36 项全部通过（既有 5 项 + 新增 31 项）。同一新测试在修改前的 acquire.py 上有 21 项不通过。真实信封结构另用已安装 bili 0.6.2 的 payloads/formatter 函数离线生成核对；yt-dlp 2026.08.19 的 `parse_options` 离线解析两种模式的命令。平台工具在测试中均为临时存根，本轮未登录、未联网获取、未下载视频、未安装依赖；B站/YouTube 真实平台端到端仍未验证，服务器运行未验证。修改前写下的 failed 回执不会自动重新分类，需用 `--retry-reason` 记明解析已修复后再试一次。
+
+## 学习与工作流蒸馏重定位（2026-11-08）
+
+本轮只改分发技能的 Markdown 文档，范围改为：发现 B站/YouTube 视频、复用已有材料、读完可得全文、按需核对画面，产出学习笔记或作者工作流说明；只要候选时交付候选即止。脚本、测试、依赖、模板和 quark 参考未改。
+
+- 新增 `references/search.md`：多方向搜索与候选交付。按 requirements 固定版本的实际 help 写明 `bili search` 0.6.2 只有 `--type/--page/--max/--json/--yaml`；排序、日期、时长等筛选来自未合入本仓库的本地补丁，标为不可假定存在。
+- `distillation.md` 增加五类证据标注（来源主张、画面所见、推断、外部佐证、实际执行）、作者工作流说明结构和方法来源；`teaching.md` 改为学习笔记写法；`transcription-visual.md` 把转写写成在已授权方式中选择，夸克为可选项之一；`storage.md`/`setup.md` 改为交付到用户指定位置，不要求新建知识库、总账或固定目录；Notion 只作为可选交付接口。
+- 移除分发技能的 `references/tongji.md` 及 README、SKILL、platforms、workflow、storage、setup 中的同济流程。上文 2026-10-02 的同济记录是历史证据，保留不改，不再代表当前分发范围。
+- 普通蒸馏自包含，不需要仓颉或其他学习技能；参考来源在 distillation.md 注明出处与取舍，未安装或打包这些项目。
+
+本轮验证：`python -m unittest discover -s tests -v` 36 项全部通过；Markdown 相对链接与锚点、Skill 前置信息、旧流程与个人路径扫描通过。另用标注为合成的示例演示了学习笔记、作者工作流、只要候选和材料不足四种行为（见本轮交付的 validation.md），这些是文档写法示范，不是独立模型评测，也不是平台实测。本轮未联网、未调用视频平台、未安装、未登录、未转写、未上传。
+
+遗留：`templates/source-record.example.json` 仍含 `tongji` 平台占位与 `course_id`/`sub_id` 字段，不在本轮可改范围内；workflow 已说明公开平台视频留空即可。B站/YouTube 真实平台端到端与服务器运行仍未验证。
+
+## 学习与工作流蒸馏重定位：校正（2026-11-08）
+
+同一授权范围内的复核校正，仍只改允许的 Markdown。
+
+- `platforms.md` B站顺序改为：复用已有正文 → 一次 CLI 字幕 → 执行端实际可用的浏览器字幕/文字稿（按执行端配置顺序）→ 仅当正文仍不可得且确需媒体时选一条媒体路线（Bili23 MCP 或 yt-dlp media）并转已授权转写。CLI 认证失败本身不触发下载视频。只要视频的请求、分集身份、每路线一次和能力如实说明保留。YouTube 段去掉 Chrome 示例，改为按执行端配置顺序；README 的 B站说明同步。
+- `transcription-visual.md`：ffprobe 只说明容器与流元数据可读（时长、分辨率、音轨），不证明整段媒体可完整解码或播放；完整解码/播放是另一项需授权的检查。元数据可读、媒体可播放、正文已核读分别登记。
+- 交付 validation.md 中三个作者编写的合成示例已修正（链表推断收窄、候选示例补占位链接/平台/分集并去掉计数矛盾）；它们仍是合成示例，不是独立模型评测或平台实测。
+
+校正后验证：`python -m unittest discover -s tests -v` 运行一次，36 项通过；以原始基线重放新补丁并比对整个源码树，Markdown 链接/锚点与范围扫描通过。未联网、未调用平台、未安装、未改脚本/测试/模板。模板中的 `tongji`/`course_id`/`sub_id` 占位仍为范围外遗留。
+
+
+## VidTrail private v0.1.0 preview (2026-11-08)
+
+The distribution is renamed to vidtrail. Skill instructions and runtime references are maintained in English, with English and Chinese repository introductions. Prior entries above are historical; their former platform scope and unresolved template placeholders are superseded by the current skill and template. The acquisition helper and dependency pins retain the previously accepted baseline. Current tests, existing-material replays, installer checks, limitations and the public-release review gap are recorded in [RELEASE_CHECKS.md](RELEASE_CHECKS.md). No new video-platform requests, authentication, ASR, cloud uploads or source-derived workflow execution were authorized for this batch.

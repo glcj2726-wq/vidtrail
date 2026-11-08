@@ -1,8 +1,12 @@
-# 仓库维护与使用
+# Repository maintenance
 
-- 本仓库是视频技能的可移植分发源，技能入口为 `.agents/skills/coco-video-research-distill/SKILL.md`。先读当前项目/目标知识库规则，再按需读取技能参考；不依赖仓库之外作者的本机规则文件。
-- 用户只要候选时止于候选。完整蒸馏先读全文，按需补画面；不得把简介、AI摘要或已下载文件等同于全文理解。
-- 原件、Cookie、凭据、视频与私人笔记放仓库外。安装检查只读；安装依赖、账号授权、上传、费用、删除遵守用户当前授权，不继承原作者任务的授权。
-- 同一来源 ID + 分集 + 获取目标查重，复用已核验结果；失败一次换指定路线，不因换线程重复获取。字幕就绪停止获取。
-- 修改后运行 `python -m unittest discover -s tests`，检查 Skill 引用与脚本、无个人路径/凭据。真实平台测试与离线测试分开记录，未在服务器运行就标未验证。
-- 本仓库只输出获取回执、来源指针及方法；知识库按自身规则登记、保存和提交，不创建第二份知识库。
+This repository distributes VidTrail. Start at `.agents/skills/vidtrail/SKILL.md`; load only the references needed for the current task. Follow the consumer project's own rules and paths, not the maintainer's machine configuration.
+
+- Candidate-only requests stop at candidates. Full-video distillation reads all available text and checks important visuals as needed. Acquisition does not establish understanding.
+- Reuse by stable platform ID + part/cid + target. Retain attempts; do not repeat a failed route without a relevant documented change. Stop unnecessary acquisition once text is sufficient.
+- Keep originals, media, credentials, actual user-material receipts, private notes and execution records outside distribution source. Optional tools, uploads, authentication, installs and costs need applicable authorization.
+- Respect the user's destination and current project organization. Do not create a second knowledge base or imply permission to execute a video's procedures.
+- After changes, run `python -m unittest discover -s tests`, validate skill format, and check references and installer behavior. Separate offline tests, existing-material replays, live platform tests and user acceptance.
+- Preserve pre-existing modifications. Stage explicit intended files only; no automatic commits/pushes without user authorization. Scan the complete staged diff, including untracked additions, for private material and secrets.
+
+Current verification and limits: [docs/VALIDATION.md](docs/VALIDATION.md). Method references: [ATTRIBUTION.md](ATTRIBUTION.md).

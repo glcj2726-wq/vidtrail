@@ -1,0 +1,6 @@
+interface:
+  display_name: "VidTrail · 观迹"
+  short_description: "Find videos and distill grounded notes and workflows"
+  default_prompt: "Use $vidtrail to find or understand the requested video, reuse available materials, and deliver sourced notes or a creator workflow in my preferred language."
+policy:
+  allow_implicit_invocation: true

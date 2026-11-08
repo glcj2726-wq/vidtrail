@@ -5,7 +5,7 @@ import shutil
 
 
 def install(destination, copy=False):
-    source = Path(__file__).resolve().parents[1] / ".agents/skills/coco-video-research-distill"
+    source = Path(__file__).resolve().parents[1] / ".agents/skills/vidtrail"
     target = Path(destination).expanduser().resolve() / source.name
     if target.exists() or target.is_symlink():
         if target.is_symlink() and target.resolve() == source:
