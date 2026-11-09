@@ -1,3 +1,5 @@
+> **Historical log — not current verification.** The current checks, test counts and limits are in [RELEASE_CHECKS.md](RELEASE_CHECKS.md). The entries below, mostly in Chinese and dated 2026-10-01 to 2026-11-08, are kept unchanged as history. Their test counts, knowledge-base registration step and Tongji workflow do not describe the current skill. New evidence is appended at the end.
+
 # 验证与实际能力
 
 发布准备：2026-10-01。维护源是本仓库中的可移植技能，已有私人本地技能保留，不自动覆盖。
@@ -81,3 +83,11 @@ CLI 退出码有一处窄幅变更：partial 从 2 改为新增的 3；0（acqui
 ## VidTrail private v0.1.0 preview (2026-11-08)
 
 The distribution is renamed to vidtrail. Skill instructions and runtime references are maintained in English, with English and Chinese repository introductions. Prior entries above are historical; their former platform scope and unresolved template placeholders are superseded by the current skill and template. The acquisition helper and dependency pins retain the previously accepted baseline. Current tests, existing-material replays, installer checks, limitations and the public-release review gap are recorded in [RELEASE_CHECKS.md](RELEASE_CHECKS.md). No new video-platform requests, authentication, ASR, cloud uploads or source-derived workflow execution were authorized for this batch.
+
+## Privacy and path repair (2026-11-08 UTC, uncommitted patch on 997dda9)
+
+Appended record; the historical text above is unchanged. The helper now passes `--no-write-info-json` in both yt-dlp modes, validates an explicit cookie path before creating any directory, leaves older `.info.json` files in place while listing them under `sensitive_metadata_retained` instead of `files`, and checks that every existing level below the data root and an existing `receipt.json` stay inside the chosen root and outside the source checkout or installed skill. Offline results: 59 tests passed with pinned yt-dlp 2026.8.19 (59 passed with 3 skipped without it). The new privacy/path tests fail on the base helper as intended, including real yt-dlp writing a per-run synthetic cookie into `.info.json`. No live platform request, authentication, real credential or visual review was involved. Details and limits: [RELEASE_CHECKS.md](RELEASE_CHECKS.md).
+
+## Coordinator verification addendum — 2026-11-09
+
+The collected repair was independently checked in a separate Linux copy: 59 tests passed with zero skips in the pinned yt-dlp 2026.8.19 environment, and a separate prewritten 15-case behavioral oracle passed in full (the same oracle fails 14 cases on the old helper). On the old helper, the 23 new regression methods have 18 failing methods and 5 passing controls. Windows rerun: 59 total, 5 passed and 54 skipped. The system-Python result above is 59 total: 56 passed and 3 skipped, not 59 passes plus skips. These are offline/synthetic checks; no fresh platform access, real credentials, visual review or source-workflow execution. See [current release checks](RELEASE_CHECKS.md).

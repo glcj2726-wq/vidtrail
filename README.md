@@ -51,7 +51,9 @@ python .agents/skills/vidtrail/scripts/acquire.py --route bili --url 'https://ww
 python .agents/skills/vidtrail/scripts/acquire.py --route yt-dlp --url 'https://www.youtube.com/watch?v=3UgXWMQtB8E' --mode subtitles --data-root /absolute/path/to/materials
 ```
 
-These are invocation examples, not claims those sources were fetched in this release. The helper makes one acquisition attempt and retains receipts/hashes; it does not generate notes, provide ASR, control a browser, upload, or implement the creator's workflow. `acquired` means files obtained, not text verified. Exit codes: 0 acquired; 1 pre-acquisition stop; 2 failed/unavailable/invalidated; 3 partial. Hash-valid partial subtitles can be reused without another platform call. See [Platforms](.agents/skills/vidtrail/references/platforms.md).
+These are invocation examples, not claims those sources were fetched in this release. The helper makes one acquisition attempt and retains receipts/hashes; it does not generate notes, provide ASR, control a browser, upload, or implement the creator's workflow. `acquired` means files obtained, not text verified. Exit codes: 0 acquired; 1 pre-acquisition stop; 2 failed/unavailable/invalidated; 3 partial. Hash-valid partial subtitles can be reused without another platform call.
+
+Receipts keep the requested canonical URL, platform ID and part, status, file sizes and SHA256. The helper passes `--no-write-info-json` to yt-dlp in both modes, because yt-dlp's raw `.info.json` can embed cookie values; extractor metadata such as cid, uploader or duration is therefore not retained or verified by the helper. If materials from an earlier version still contain `.info.json`, the helper keeps them in place, leaves them out of `files`, and reports them under `sensitive_metadata_retained`; review them privately before sharing. A link inside the material directory that leads outside it, or into this repository or an installed skill, stops the helper before it reads or writes. These are ordinary path checks, not an OS sandbox. See [Platforms](.agents/skills/vidtrail/references/platforms.md).
 
 ## Boundaries and verification
 
@@ -59,4 +61,4 @@ Bilibili CLI subtitles support only part 1 in the pinned baseline; never substit
 
 Quark and Notion are optional. No transcription engine/model is bundled. With unavailable text or important visuals, deliver a limited result and name the gap rather than inventing steps. No universal claim of fresh-machine or anonymous VPS platform success is made.
 
-See [verification](docs/VALIDATION.md), [method attribution](ATTRIBUTION.md), and [the full skill](.agents/skills/vidtrail/SKILL.md). Source and documentation are MIT licensed; linked projects and source videos retain their own terms. Final public-release review is a separate next step.
+See [current release checks](docs/RELEASE_CHECKS.md), [method attribution](ATTRIBUTION.md), and [the full skill](.agents/skills/vidtrail/SKILL.md). Source and documentation are MIT licensed; linked projects and source videos retain their own terms. [docs/VALIDATION.md](docs/VALIDATION.md) is a historical log kept for reference, not current verification. Final public-release review is a separate next step.

@@ -310,7 +310,8 @@ class MediaSeparationTests(Workspace):
             self.assertNotIn(flag, command)
         self.assertNotIn("--skip-download", command)
         self.assertIn("-f", command)
-        self.assertIn("--write-info-json", command)
+        self.assertIn("--no-write-info-json", command)
+        self.assertNotIn("--write-info-json", command)
         media = [f for f in receipt["files"] if f["path"].endswith(".mp4")]
         self.assertEqual(media[0]["sha256"], sha256(media[0]["path"]))
 
@@ -356,7 +357,9 @@ class PartialAcquisitionTests(Workspace):
         self.assertEqual(receipt["failure"], {"exit_code": 1, "reason": "command_failed"})
         self.assertEqual(receipt["usable_files"], ["video.zh.vtt"])
         self.assertEqual(receipt["content_verification"], "not_performed")
-        self.assertEqual({Path(f["path"]).name for f in receipt["files"]}, {"video.zh.vtt", "video.info.json"})
+        # A stray raw .info.json is kept on disk but reported only as sensitive metadata, never as an artifact.
+        self.assertEqual({Path(f["path"]).name for f in receipt["files"]}, {"video.zh.vtt"})
+        self.assertEqual({Path(p).name for p in receipt["sensitive_metadata_retained"]}, {"video.info.json"})
         for entry in receipt["files"]:
             self.assertEqual(entry["sha256"], sha256(entry["path"]))
             self.assertEqual(entry["bytes"], Path(entry["path"]).stat().st_size)
@@ -384,7 +387,7 @@ class PartialAcquisitionTests(Workspace):
 
     def test_changed_partial_file_is_invalidated_without_running_the_tool(self):
         first = self.partial()
-        Path(first["files"][1]["path"]).write_text("changed", encoding="utf-8")
+        Path(first["files"][0]["path"]).write_text("changed", encoding="utf-8")
         invalid = self.result(self.cli(), 2)
         self.assertEqual(invalid["status"], "invalidated")
         self.assertEqual(invalid["failure"], first["failure"])
@@ -430,7 +433,7 @@ class PartialAcquisitionTests(Workspace):
                 receipt = self.result(self.cli(data=self.tmp / name), 2)
                 self.assertEqual((receipt["status"], receipt["reason"]), ("failed", "no_usable_target_or_command_failed"))
                 self.assertNotIn("failure", receipt)
-                self.assertEqual(len(receipt["files"]), 1)
+                self.assertEqual(len(receipt["files"]) + len(receipt.get("sensitive_metadata_retained", [])), 1)
 
     def test_exit_zero_stays_acquired_and_reuse_exits_zero(self):
         self.scene(write={"video.zh.vtt": VTT})

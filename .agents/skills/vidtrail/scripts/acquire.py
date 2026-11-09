@@ -43,9 +43,76 @@ def digest(path):
     return h.hexdigest()
 
 
-def files_valid(receipt):
+def inside(path, parent):
+    return path == parent or parent in path.parents
+
+
+def checked(path, root, distribution):
+    """Resolve an existing entry; it must stay inside the canonical data root and outside the distribution.
+
+    These are ordinary pre-use checks, not an OS sandbox or protection against concurrent hostile renames."""
+    if path.is_symlink() and not path.exists():
+        raise ValueError(f"Data path is a broken link; fix or remove it yourself: {path}")
+    resolved = path.resolve()
+    if not inside(resolved, root) or inside(resolved, distribution):
+        raise ValueError(f"Data path leaves the chosen data root or enters the skill distribution through a link: {path}")
+    return resolved
+
+
+def files_valid(receipt, root, distribution):
     files = receipt.get("files", [])
-    return bool(files) and all(Path(f["path"]).is_file() and digest(Path(f["path"])) == f["sha256"] for f in files)
+    for f in files:
+        path = Path(f["path"])
+        try:
+            path = checked(path, root, distribution) if path.exists() or path.is_symlink() else path
+        except ValueError:
+            return False  # A recorded file now redirected outside the root is not read.
+        if not path.is_file() or digest(path) != f["sha256"]:
+            return False
+    return bool(files)
+
+
+# Earlier helper versions requested yt-dlp --write-info-json; that raw metadata can embed cookies.
+RAW_METADATA = ".info.json"
+METADATA_WARNING = ("Raw yt-dlp .info.json metadata from an earlier helper version or an unexpected tool output is kept "
+                    "where it was and excluded from files. It may contain cookies or account data: review it privately "
+                    "before sharing or uploading these materials. It was not deleted, rewritten or refetched.")
+
+
+def outward(receipt):
+    """Copy a receipt without raw metadata in artifact lists; report those paths only with a warning."""
+    result = dict(receipt)
+    sensitive = set(receipt.get("sensitive_metadata_retained") or [])
+
+    def split(entries):
+        entries = entries if isinstance(entries, list) else []
+        for entry in entries:
+            if isinstance(entry, dict) and str(entry.get("path", "")).endswith(RAW_METADATA):
+                sensitive.add(str(entry["path"]))
+        return [e for e in entries if not (isinstance(e, dict) and str(e.get("path", "")).endswith(RAW_METADATA))]
+
+    if "files" in receipt:
+        result["files"] = split(receipt["files"])
+    if isinstance(receipt.get("prior_partial"), dict) and "files" in receipt["prior_partial"]:
+        result["prior_partial"] = {**receipt["prior_partial"], "files": split(receipt["prior_partial"]["files"])}
+    if sensitive:
+        result["sensitive_metadata_retained"] = sorted(sensitive)
+        result["metadata_warning"] = METADATA_WARNING
+    return result
+
+
+def prepare_target(root, names, distribution):
+    """Check every existing level below the data root before creating anything; return the resolved target."""
+    current = root
+    for name in names:
+        candidate = current / name
+        if candidate.exists() or candidate.is_symlink():
+            current = checked(candidate, root, distribution)
+            if not current.is_dir():
+                raise ValueError(f"Data path exists but is not a directory: {candidate}")
+        else:
+            current = candidate
+    return current
 
 
 def distribution_root():
@@ -98,7 +165,7 @@ def bili_subtitle(stdout):
 
 def target_files(attempt, mode):
     endings = (".vtt", ".srt", ".ass") if mode == "subtitles" else (".mp4", ".mkv", ".webm")
-    return sorted(f.name for f in attempt.iterdir() if f.is_file() and f.suffix in endings and f.stat().st_size)
+    return sorted(f.name for f in attempt.iterdir() if f.is_file() and not f.is_symlink() and f.suffix in endings and f.stat().st_size)
 
 
 def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
@@ -107,22 +174,32 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
         raise ValueError("bili route supports Bilibili P1 subtitles only; choose an explicit alternate route for other targets.")
     root = Path(data_root).expanduser().resolve()
     distribution = distribution_root()
-    if root == distribution or distribution in root.parents:
+    if inside(root, distribution):
         raise ValueError("Data must be stored outside the skill distribution repository.")
-    target = root / platform / video_id / f"p{part}" / f"{route}-{mode}"
-    target.mkdir(parents=True, exist_ok=True)
+    cookie = None
+    if cookies_file:
+        # Checked before any data directory or attempt exists, even when yt-dlp is not installed.
+        cookie = Path(cookies_file).expanduser().resolve()
+        if not cookie.is_file() or inside(cookie, distribution):
+            raise ValueError("Cookie file must exist outside the distribution repository.")
+    target = prepare_target(root, (platform, video_id, f"p{part}", f"{route}-{mode}"), distribution)
     receipt_path = target / "receipt.json"
+    if receipt_path.exists() or receipt_path.is_symlink():
+        receipt_path = checked(receipt_path, root, distribution)
+        if not receipt_path.is_file():
+            raise ValueError(f"Receipt path exists but is not a file: {target / 'receipt.json'}")
+    target.mkdir(parents=True, exist_ok=True)
     prior_partial = None
     if receipt_path.exists():
         old = json.loads(receipt_path.read_text(encoding="utf-8"))
         kept = old.get("status") in ("acquired", "partial")
-        valid = kept and files_valid(old)
+        valid = kept and files_valid(old, root, distribution)
         if valid and old["status"] == "acquired":
-            return {**old, "reused": True}
+            return {**outward(old), "reused": True}
         if not retry_reason:
             if valid:
-                return {**old, "reused": True, "action": "Verify the retained files; the failed remainder needs the next skill route or --retry-reason after an actual environment/source change."}
-            return {**old, "status": "invalidated" if kept else old["status"],
+                return {**outward(old), "reused": True, "action": "Verify the retained files; the failed remainder needs the next skill route or --retry-reason after an actual environment/source change."}
+            return {**outward(old), "status": "invalidated" if kept else old["status"],
                     "reused": True, "action": "Use the next skill route; retry only after an actual environment/source change."}
         # A later attempt replaces receipt.json, so it must keep pointing at earlier partial evidence.
         prior_partial = old.get("prior_partial")
@@ -134,6 +211,9 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
                "route": route, "mode": mode, "timestamp": datetime.now(timezone.utc).isoformat(),
                "status": "unavailable", "files": [], "retry_reason": retry_reason,
                "content_verification": "not_performed"}
+    if route == "yt-dlp":
+        # Identity is the requested canonical URL/ID/part; extractor metadata (e.g. cid) is not kept or checked.
+        receipt["extractor_metadata"] = "not_retained"
     if prior_partial:
         receipt["prior_partial"] = prior_partial
     executable = shutil.which(route)
@@ -145,8 +225,9 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
         if route == "bili":
             cmd = [executable, "video", video_id, "--subtitle-timeline", "--subtitle-format", "srt", "--json"]
         else:
+            # Raw yt-dlp info.json can embed cookies, so it is never requested; receipts keep the canonical identity.
             cmd = [executable, "--retries", "0", "--extractor-retries", "0", "--fragment-retries", "0",
-                   "--file-access-retries", "0", "--socket-timeout", "20", "--no-progress", "--write-info-json",
+                   "--file-access-retries", "0", "--socket-timeout", "20", "--no-progress", "--no-write-info-json",
                    "-o", str(attempt / "%(id)s.%(ext)s")]
             if shutil.which("node"):
                 cmd += ["--js-runtimes", "node"]
@@ -159,10 +240,7 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
             else:
                 # A subtitle-service error must not cancel an otherwise available media target.
                 cmd += ["-f", "bv*[height<=1080]+ba/b[height<=1080]", "--merge-output-format", "mp4"]
-            if cookies_file:
-                cookie = Path(cookies_file).expanduser().resolve()
-                if not cookie.is_file() or cookie == distribution or distribution in cookie.parents:
-                    raise ValueError("Cookie file must exist outside the distribution repository.")
+            if cookie:
                 cmd += ["--cookies", str(cookie)]
             cmd.append(canonical)
         usable = []
@@ -195,8 +273,9 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
             receipt.update(status="partial", reason="usable_files_after_command_failure", usable_files=usable)
         # Raw stderr and command arguments are deliberately not stored: credentials may occur there.
     for path in sorted(attempt.iterdir()):
-        if path.is_file():
+        if path.is_file() and not path.is_symlink():
             receipt["files"].append({"path": str(path), "bytes": path.stat().st_size, "sha256": digest(path)})
+    receipt = outward(receipt)
     text = json.dumps(receipt, ensure_ascii=False, indent=2)
     (attempt / "receipt.json").write_text(text, encoding="utf-8")
     receipt_path.write_text(text, encoding="utf-8")

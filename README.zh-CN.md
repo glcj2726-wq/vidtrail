@@ -33,7 +33,7 @@ python scripts/install_skill.py --project /absolute/path/to/your-project
 
 ## 哪些事需要你的环境提供
 
-本仓库保留 bili / yt-dlp 单次获取与回执辅助程序。浏览器、Bili23、账号登录态、本地或云端转写工具，需要执行端实际具备且已获授权。夸克和 Notion 是可选项，普通蒸馏不依赖仓颉或另一套学习技能。
+本仓库保留 bili / yt-dlp 单次获取与回执辅助程序。回执记录请求的规范链接、平台 ID 与分集、状态、文件大小和 SHA256；yt-dlp 的原始 `.info.json` 可能内嵌 Cookie 值，辅助程序在两种模式下都明确传入 `--no-write-info-json`，因此不保留、也不核验 cid 等提取器元数据。旧版本留下的 `.info.json` 原地保留，不列入 `files`，而在 `sensitive_metadata_retained` 中提示，分享前请私下检查。材料目录内若有链接指向目录之外、本仓库或已安装技能，辅助程序在读写前停止；这是普通路径检查，不是系统沙箱。浏览器、Bili23、账号登录态、本地或云端转写工具，需要执行端实际具备且已获授权。夸克和 Notion 是可选项，普通蒸馏不依赖仓颉或另一套学习技能。
 
 仓库不包含维护者的增强搜索补丁、专用登录配置、转写辅助脚本或私人课堂流程。GitHub 登录不能代替 B站、YouTube 登录；VPS 网络与 IP 条件也可能影响获取。
 
@@ -41,7 +41,7 @@ python scripts/install_skill.py --project /absolute/path/to/your-project
 
 ## 验证与来源
 
-已有离线检查与真实材料回放分别记录在[验证说明](docs/VALIDATION.md)。真实材料回放使用本机已有字幕，不代表本轮重新访问平台、核对全片画面或执行了视频中的流程。
+当前离线检查与已有材料回放记录在[发布检查](docs/RELEASE_CHECKS.md)；[docs/VALIDATION.md](docs/VALIDATION.md) 只是历史记录，不代表当前验证。真实材料回放使用本机已有字幕，不代表本轮重新访问平台、核对全片画面或执行了视频中的流程。
 
 本机原有技能有实际成功经验；这不能直接证明便携版本在任意新环境都成功。当前尚未完成最后独立发布审查和新版在线平台端到端测试。
 

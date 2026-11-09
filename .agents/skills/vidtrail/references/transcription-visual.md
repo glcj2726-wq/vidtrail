@@ -4,7 +4,7 @@ Transcription requires media that is actually available. It cannot retrieve a so
 
 ## Check the media
 
-ffprobe establishes readable container/stream metadata, duration, resolution and audio tracks. It does not prove the whole file decodes or plays correctly. If a full decode/playback check is needed, record its separate scope and result. Identity comes from matching source metadata and part/cid.
+ffprobe establishes readable container/stream metadata, duration, resolution and audio tracks. It does not prove the whole file decodes or plays correctly. If a full decode/playback check is needed, record its separate scope and result. ffprobe metadata does not establish source identity, and helper receipts record only the requested URL/ID/part, not extractor metadata. Establish identity and part/cid from source evidence actually inspected; otherwise label them requested, not verified.
 
 ```sh
 ffprobe -v error -show_format -show_streams -of json "$VIDEO_FILE"
