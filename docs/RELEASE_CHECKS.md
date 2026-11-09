@@ -1,8 +1,34 @@
 # v0.1.0 private preview checks
 
-This record concerns the English VidTrail distribution and rename, not a claim of universal platform success. The repository remains private. Final independent release review is pending.
+This page gives the current private-update checks first and retains earlier implementation records below. It does not promise universal platform access. Making the repository public is a separate maintainer decision.
 
-## Current status: independently verified privacy/path repair (2026-11-09)
+## Current private update: reviewed fixes and public-facing examples (2026-11-09)
+
+The update integrates the prior candidate on base `4738262` and resolves the verified review findings. Repository visibility stays private. No installed maintainer skill or original material was changed.
+
+- **Offline regression:** existing Linux environment, Python 3.10.12 and pinned yt-dlp 2026.8.19: **83 passed, zero skipped**. Native Windows Python 3.13: **83 total, 29 passed, 54 POSIX cases skipped**. Tests include the pinned tool's actual stdout caption diagnostic, misleading IDs/URLs, ambiguous expiry, TLS failures, secret-free bili error handling, partial reuse and path protection. All platform inputs are synthetic; no network acquisition is part of these tests.
+- **Compatibility:** CLI options, exit codes 0/1/2/3, legacy reasons/status and old-receipt reuse are preserved. Only usable bili caption responses are newly saved as content; failed or malformed responses retain fixed diagnostics without raw payloads. A requested-language absence says nothing about other languages.
+- **Packaging:** official skill-format check and temporary copy installation passed; a repeated install preserves the existing destination. Link/path behavior is covered by the full Linux regressions. This does not establish automatic discovery on every agent host.
+- **Examples:** four full Chinese local outputs were revised against retained source text. The YouTube workflow now creates the note before embedding or editing content. The two public excerpts are available in [English learning-note](examples/learning-note.md), [Chinese learning-note](examples/learning-note.zh-CN.md), [English workflow](examples/creator-workflow.md) and [Chinese workflow](examples/creator-workflow.zh-CN.md). README previews render our own writing, with no source-video frames bundled.
+- **Visuals:** normal muted YouTube playback supplied two corrected local frames at 22:12.62 and 22:43.44. The saved files, not just the live browser view, were inspected: the global `Book Notes` filter and `Contain` setting are readable. The old five-star crop does not show the full value; captions now attribute that detail to narration. This is targeted visual checking, not full audiovisual viewing or execution of the creator's workflow.
+- **Materials and privacy:** local source originals, previous outputs and both installed skills matched their pre-task hashes. Proposed source files and 72 reachable historical blobs passed bounded checks for common credential/private-key patterns and maintainer-specific paths. Raw captions, media, credentials, private receipts and original video frames are excluded. These checks do not guarantee detection of every possible sensitive string.
+
+No new caption request, media download/retry, dependency install, login, cloud upload or paid service was performed. Existing live observations remain: authenticated local Bilibili media succeeded; YouTube media returned 403, while browser playback worked. Anonymous/new-machine access, optional Bili23/cloud integrations and the source creators' workflows are not newly validated. Known platform restrictions are documented limitations, not hidden passes.
+
+## Historical candidate: failure guidance, readable outputs and visual evidence (2026-11-09)
+
+This is an uncommitted local candidate based on `4738262`; it has not been pushed or made public. Installed maintainer skills are unchanged. The next section preserves the earlier privacy/path release verification.
+
+- New failed/unavailable/partial receipts may include `failure_kind`; legacy reasons, exit codes, reuse and dependency pins are unchanged. Offline cases cover authentication, expiry, 429, access challenges, network diagnostics, explicit missing captions, unknown causes, structured bili errors and secret-free partial reuse.
+- Native Windows: **78 tests: 24 passed, 54 POSIX tests skipped**. Existing WSL Ubuntu: **78 tests: 75 passed, 3 pinned-yt-dlp fixture tests skipped because that Python environment lacks the package**. No dependency was installed. Those three fixtures previously passed on the accepted baseline; they are not claimed as rerun passes here. Skill-format validation passed.
+- The two selected long-video transcripts were reused, fully read in their verified derived form, and rewritten into four Chinese artifacts. Notes explain causal understanding; workflows trace prerequisites, inputs, dependencies, outputs and decisions. Source-time links and selected original frames replace repeated audit prose. Real user materials stay outside this distribution; the two repository examples are short source-grounded excerpts.
+- Local authenticated media acquisition was attempted once per platform with the existing yt-dlp route, not anonymous access: Bilibili `BV1xFnt6zE3K` P1 succeeded (76,094,116 bytes, 1920×1080; ffprobe duration 1928.32 seconds); YouTube `P57Bg5yIkdA` returned HTTP 403 and no media. Bare 403 remains unknown, not diagnosed as expired login. No retry or new subtitle request occurred. The media helper fingerprint is retained with the local evidence; a later classification-only addition handles bili JSON errors and does not alter either yt-dlp media command.
+- Targeted visuals were inspected from the Bilibili file and normal source-page playback, plus five YouTube points. A Bilibili multi-timepoint sequence illustrates segment dependencies; YouTube views distinguish All views and This view. This is selected visual review, not full audiovisual review, library deployment, creator-workflow execution, ASR or proof of user mastery.
+- Bili23 was disabled/not exposed and was not enabled or tested. Browser access does not prove CLI media access; subtitle success does not prove media success. The existing installer is checked only in a disposable project, never over an installed user skill. No install, upgrade, login, cloud upload, payment, commit, push or publication is part of this candidate.
+
+The current limits are the skipped pinned-library fixtures, YouTube media 403, uninspected visuals/settings and the final independent release review. Earlier statements below about no new platform access describe their historical batches only.
+
+## Historical release status: independently verified privacy/path repair (2026-11-09)
 
 This revision incorporates the twelve-file repair based on `997dda9c0368672822ecf273bb0245ec58ee0cb1`. The repository remains a private preview. The patch and full-file archive matched exactly, all source changes stayed within the approved twelve paths, and the earlier `VALIDATION.md` body was retained byte-for-byte.
 
@@ -42,14 +68,14 @@ Helper SHA256 after the patch: `32a6888a5e67bf3fd7484b65698715f963abbab6e2bdb6d3
 
 The integration starts from the existing main commit and the previously accepted 22-file VPS candidate. All 22 live VPS source files matched that candidate before integration. The accepted acquisition helper is unchanged (SHA256 `5f5214931b194ee15190cac22dbff111a1cc360d1615efd97df1a4a670d15147`); dependency pins are unchanged. Installer/test references follow the renamed skill path. The original maintainer working tree and installed skills are separate, preserved versions.
 
-## Existing-material walkthroughs
+## Historical existing-material walkthroughs (base `997dda9`)
 
 These were performed by the implementing agent using existing source files. They are not blind evaluations by a separate agent, fresh platform acquisitions, full audiovisual reviews, or executions of the videos' procedures. Raw transcripts, private notes and material receipts are excluded from this repository.
 
 | Case | Actual material / request | Result and boundary |
 | --- | --- | --- |
-| Learning note; Chinese output | YouTube `0vZ_UVLhSQQ`, all retained English auto-captions 00:04–05:12 | [Chinese learning note](examples/learning-note.zh-CN.md): one report example connects task, context and output; historical product/model claims are dated and not current recommendations; inferences are labelled; visuals remain unverified. Corrected in the repair patch |
-| Creator workflow; Chinese output | Bilibili `BV1vDeK6wEZL` P1, all 517 retained caption items, 00:00.12–16:44.92 | [Chinese workflow](examples/creator-workflow.zh-CN.md): prerequisites, input/output/dependencies, review points and feedback loop; AI as the data-collection actor with the authenticated creator-backend prerequisite; uncertain tool names are retained as gaps; no visual or execution claims. Corrected in the repair patch |
+| Learning note; Chinese output | YouTube `0vZ_UVLhSQQ`, all retained English auto-captions 00:04–05:12 | [historical Chinese learning note](https://github.com/glcj2726-wq/vidtrail/blob/473826253c5de1a349e782f80b768f927e91388a/docs/examples/learning-note.zh-CN.md): one report example connects task, context and output; historical product/model claims are dated and not current recommendations; inferences are labelled; visuals remain unverified. Corrected in the repair patch |
+| Creator workflow; Chinese output | Bilibili `BV1vDeK6wEZL` P1, all 517 retained caption items, 00:00.12–16:44.92 | [historical Chinese workflow](https://github.com/glcj2726-wq/vidtrail/blob/473826253c5de1a349e782f80b768f927e91388a/docs/examples/creator-workflow.zh-CN.md): prerequisites, input/output/dependencies, review points and feedback loop; AI as the data-collection actor with the authenticated creator-backend prerequisite; uncertain tool names are retained as gaps; no visual or execution claims. Corrected in the repair patch |
 | Candidate-only | Existing metadata fixtures; request to compare only | Stops with metadata comparison and “full text not read”; no acquisition/transcription/note generation. No live search was performed |
 | Reuse | Same original transcripts used for these new questions | Originals/hash checks reused; no new platform subprocess or download |
 | Insufficient material | Supplied description/short excerpt only; full workflow requested | Partial scope, no invented steps; requests complete text and necessary visual evidence. Implementer-authored scenario, not an independent model eval |
@@ -68,7 +94,7 @@ Results on 2026-11-08 for base `997dda9`, before the repair patch above:
 
 No optional integration, live platform operation, automatic host discovery, or separate-agent behavioral evaluation is implied by these results.
 
-## Remaining release boundary
+## Historical remaining release boundary (base `997dda9`)
 
 - No new Bilibili/YouTube access, authentication, media download, ASR or cloud upload in this batch. Historical anonymous VPS acquisition was blocked; local successes are not proof the VPS is authenticated.
 - Optional browser/Bili23/Quark/Notion/transcription integrations have not been newly validated. No tutoring/mastery evaluation or source-derived workflow execution.

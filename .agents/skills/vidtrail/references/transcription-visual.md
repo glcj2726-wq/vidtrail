@@ -33,4 +33,18 @@ Read the text first, then inspect specific evidence gaps. Talks/interviews usual
 
 Prefer existing source slides or user screenshots when identity is clear. Otherwise inspect a coarse overview when useful, then targeted timestamps. Keep readable frames and timestamps. Describe only inspected images, not visuals imagined from narration. Extracted frames are samples, not proof all visuals were reviewed. Exact code/formulas need matching visual or other primary evidence. For transcription disagreements, consult the corresponding audio when available instead of guessing.
 
+Before acquiring more media, name the questions that need images: for example, which template field receives the PDF, whether a filter applies to all views, or how a keyframe edit changes adjacent clips. For each inspected point, retain source/part, actual time, image path, what it confirms, and anything still unreadable. Keep these evidence details outside the distributed skill.
+
+Use existing images or media first, then normal source-page playback/seeking. A readable still is usually enough for a field or final result. Inspect a continuous segment or meaningful before/after frames for dragging, animation, timing, and changes between states. When the browser or stills cannot answer a necessary question, use an existing media route in [Platforms](platforms.md), with authorization and a chosen material directory. A separate explicit media-validation request may also exercise that route once. Do not download just because a CLI login failed, a browser lacks an interface, or the user said "deep". Text being ready stops redundant caption requests, not justified visual investigation.
+
+The helper currently retrieves media files, not an intelligent range-only download or an automatic whole-video analysis. Do not promise either. Downloads do not remove IP/account restrictions. Do not install a new downloader, model, or ASR system just to fill a visual gap. If the route fails, keep the supported text result and explain the remaining image question.
+
+## Screenshots and source jumps in the result
+
+Place time links next to important claims and workflow steps. For example, use `https://www.youtube.com/watch?v=VIDEO_ID&t=1004s` or `https://www.bilibili.com/video/BV_ID/?p=1&t=1537`, substituting the verified source/part and relevant seconds. These are navigation links, not proof a target is accessible. For a range, link its beginning and print the end time. Verify identity and the displayed position when inspecting a link.
+
+Embed selected frames using paths relative to the note, so the note and its assets can move together. Captions identify creator/video, actual time, and what the image demonstrates. Crop only irrelevant surrounding browser/account UI; do not hide a relevant control, warning, or state. Open the actual saved image at a readable size before delivery. Check relevant controls and values survived cropping; a correct live browser view does not prove the saved crop is correct. If a value is supported only by narration, say so rather than calling it visible. Avoid unreadable thumbnail collections and decorative screenshot quotas. A linked video time remains useful when an image is unnecessary.
+
+Label original frames, annotated source frames, and agent-created teaching diagrams distinctly. Preserve the underlying frame if annotated. Video/screenshot rights remain with their owners; the skill's MIT license does not relicense them. Keep substantial media, complete captions and private evidence outside the distribution source.
+
 State unverified visual areas or illegibility. Text read, images inspected, and workflow executed are separate outcomes; this skill does not execute the creator's workflow.

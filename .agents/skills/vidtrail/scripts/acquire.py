@@ -168,6 +168,48 @@ def target_files(attempt, mode):
     return sorted(f.name for f in attempt.iterdir() if f.is_file() and not f.is_symlink() and f.suffix in endings and f.stat().st_size)
 
 
+def failure_kind(stderr, mode, bili_stdout=None, yt_dlp_stdout=None):
+    """Classify explicit tool diagnostics, never transcript text or the presence of a Cookie file.
+
+    Return only a fixed code: diagnostics can contain secrets and must not enter receipts.
+    A 403/empty result alone does not establish missing login or absent captions.
+    """
+    text = stderr.lower()
+    if bili_stdout:
+        try:
+            envelope = json.loads(bili_stdout)
+        except (ValueError, RecursionError):
+            envelope = None
+        # bili --json emits its structured error on stdout. Inspect only the
+        # explicit error message, never a title, caption, summary or arbitrary data.
+        if isinstance(envelope, dict) and envelope.get('ok') is False:
+            error = envelope.get('error')
+            if isinstance(error, dict) and isinstance(error.get('message'), str):
+                text += '\n' + error['message'].lower()
+    rules = (
+        ("rate_limited", r"\bhttp(?:\s+error|\s+status(?:\s+code)?|\s+response(?:\s+code)?)?\s*[:=]?\s*429\b|\bstatus(?:\s+code)?\s*[:=]?\s+429\b|too many requests|rate[ -]?limit(?:ed|ing| exceeded)?|请求过于频繁|请求太频繁"),
+        ("access_verification", r"not a bot|captcha|robot verification|verify (?:you are|you're|that you are)|verification (?:required|challenge)|access challenge|机器人|人机验证|验证码"),
+        ("network_error", r"timed? ?out|timeout|connection (?:refused|reset|aborted)|name resolution|resolve (?:host|hostname)|network is unreachable|certificate (?:verify failed|(?:has |is )?expired)|网络超时|连接超时|无法解析"),
+        # Require an asserted authentication state, not 'may/might have expired',
+        # an unrelated expired certificate, or words joined across diagnostics.
+        ("expired_login", r"\b(?:cookies?|session|credentials?|login|authentication)\s+(?:(?:is|are|has|have)\s+)?(?:already\s+)?(?:expired|invalidated|no longer valid)\b|登录(?:已)?(?:失效|过期)|凭据(?:已)?过期"),
+        ("missing_login", r"not logged in|login required|log[ -]?in is required|authentication required|please (?:log in|login|sign in)|sign in to (?:view|watch|access)|未登录|请先登录|需要登录|(?:缺少|未提供)\s*sessdata|sessdata.{0,20}(?:未提供|为空|缺失)|missing\s+sessdata"),
+    )
+    for kind, pattern in rules:
+        if re.search(pattern, text):
+            return kind
+    if mode == "subtitles" and re.search(r"there are no subtitles|no (?:subtitles|captions)(?: are)? available|(?:subtitles|captions) (?:are )?not available|no subtitles for the requested languages|没有(?:可用)?字幕|无可用字幕", text):
+        return "no_subtitles"
+    # yt-dlp 2026.8.19 normally prints this diagnostic to stdout. Only this
+    # complete tool-log line is accepted; arbitrary titles/content are not errors.
+    if mode == "subtitles" and yt_dlp_stdout and any(
+        re.fullmatch(r"\[info\] There are no subtitles for the requested languages", line.strip())
+        for line in yt_dlp_stdout.splitlines()
+    ):
+        return "no_subtitles"
+    return "unknown"
+
+
 def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
     platform, video_id, part, canonical = identity(url)
     if route == "bili" and (platform != "bilibili" or part != 1 or mode != "subtitles" or cookies_file):
@@ -205,6 +247,8 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
         prior_partial = old.get("prior_partial")
         if old.get("status") == "partial":
             prior_partial = {k: old.get(k) for k in ("timestamp", "reason", "failure", "usable_files", "files")}
+            if "failure_kind" in old:
+                prior_partial["failure_kind"] = old["failure_kind"]
     attempt = target / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:8])
     attempt.mkdir()
     receipt = {"platform": platform, "video_id": video_id, "part": part, "url": canonical,
@@ -219,8 +263,10 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
     executable = shutil.which(route)
     if mode == "media" and not shutil.which("ffmpeg"):
         receipt["reason"] = "ffmpeg_missing"
+        receipt["failure_kind"] = "tool_unavailable"
     elif not executable:
         receipt["reason"] = "tool_missing"
+        receipt["failure_kind"] = "tool_unavailable"
     else:
         if route == "bili":
             cmd = [executable, "video", video_id, "--subtitle-timeline", "--subtitle-format", "srt", "--json"]
@@ -252,7 +298,7 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
                 if diagnostic:
                     receipt["diagnostic"] = diagnostic
                 # An unusable nonzero response stays unsaved like stderr; it may echo account details.
-                if process.returncode == 0 or has_subtitle:
+                if has_subtitle:
                     (attempt / "bili-response.json").write_text(process.stdout, encoding="utf-8")
                 usable = ["bili-response.json"] if has_subtitle else []
             else:
@@ -262,11 +308,18 @@ def acquire(url, route, mode, data_root, cookies_file=None, retry_reason=None):
                                  "command_failed" if usable and mode == "subtitles" else "no_usable_target_or_command_failed")
             if receipt["status"] == "failed" and any(t in process.stderr.lower() for t in ("sign in", "not a bot", "login")):
                 receipt["reason"] = "login_verification_required"
+            if receipt["status"] == "failed":
+                receipt["failure_kind"] = failure_kind(
+                    process.stderr, mode,
+                    bili_stdout=process.stdout if route == "bili" else None,
+                    yt_dlp_stdout=process.stdout if route == "yt-dlp" else None,
+                )
         except subprocess.TimeoutExpired:
-            receipt.update(status="failed", reason="timeout")
+            # A subprocess deadline can also be local processing; do not assert a network cause.
+            receipt.update(status="failed", reason="timeout", failure_kind="unknown")
             usable = target_files(attempt, mode)
         except OSError:
-            receipt.update(status="failed", reason="invocation_failed")
+            receipt.update(status="failed", reason="invocation_failed", failure_kind="unknown")
         # Media stays failed: after a nonzero exit a .mp4 may be one unmerged stream.
         if receipt["status"] == "failed" and usable and mode == "subtitles":
             receipt["failure"] = {"exit_code": receipt.get("exit_code"), "reason": receipt["reason"]}

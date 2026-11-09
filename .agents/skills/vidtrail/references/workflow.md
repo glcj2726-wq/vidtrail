@@ -17,9 +17,9 @@ insufficient text or visuals → explicit partial result and smallest useful add
 3. For existing text, verify identity, language, beginning/end, and obvious gaps. An AI summary or description is only navigation. Reliable text goes directly to full reading.
 4. Otherwise use [Platforms](platforms.md), once per route and target. Distinguish missing tool, command failure, access challenge, and confirmed lack of captions. Subtitles and media are separate targets. A download-only request ends after media checks.
 5. With media but no text, choose an existing authorized route in [Transcription and visuals](transcription-visual.md). Without one, report partial and the minimum missing material or permission. Transcription cannot obtain inaccessible source media.
-6. Read the full available text in chunks, track the read range, establish the causal structure, and inspect visuals for specific gaps. See [Distillation](distillation.md).
-7. Write [learning notes](teaching.md), a [creator workflow](distillation.md#creator-workflow), or both. For a combined answer, connect why and how through the same example.
-8. Follow [Storage](storage.md). State coverage, evidence, and remaining gaps. Use the user's requested language or otherwise the conversation language.
+6. Read the full available text in chunks, track the read range, establish the causal structure, and name questions that need visual evidence. Reuse images/media, inspect normal source-page visuals, then use necessary local media for continuous changes or illegible browser details. Full text does not by itself settle visual questions. See [Distillation](distillation.md) and [Transcription and visuals](transcription-visual.md).
+7. Write [learning notes](teaching.md), a [creator workflow](distillation.md#creator-workflow), or both. Notes explain the problem and causal understanding; workflows make inputs, dependencies, outputs and decisions usable. For both, preserve the same example without duplicating the full explanation. Offer deeper teaching only when requested.
+8. Follow [Storage](storage.md). Add clickable source-time links and necessary readable screenshots with explanatory captions. State shared coverage briefly and keep specific gaps near affected claims; put detailed test evidence in a separate report when needed. Use the user's requested language or otherwise the conversation language.
 
 ## State follows actual evidence
 

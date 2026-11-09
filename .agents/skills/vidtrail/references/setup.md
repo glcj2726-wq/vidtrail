@@ -1,6 +1,26 @@
 # Setup and actual capabilities
 
-Follow the repository README for an isolated Python environment, dependencies, doctor, and skill installation. The doctor checks command presence/version only: not authentication, MCP connectivity, platform access, or learning quality.
+Follow the repository README for transcript-first installation. For live acquisition, create an isolated tool environment deliberately, from the repository root:
+
+```sh
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python scripts/doctor.py
+```
+
+On Windows, activate with `.venv\Scripts\Activate.ps1` (or invoke that environment's Python directly). These are instructions, not automatic installation actions. The doctor checks command presence/version only: not authentication, MCP connectivity, platform access, or learning quality.
+
+The installer defaults to a link; `--copy` makes an independent skill copy and avoids Windows symlink privileges. An existing destination is preserved. Link updates follow the checkout; copies require deliberate replacement. Use `--skills-dir /absolute/skills-directory` when the host requires another discovery location. Do not claim untested host discovery merely because copying succeeded.
+
+Choose a material directory outside the distribution, then run only an available authorized route:
+
+```sh
+python .agents/skills/vidtrail/scripts/acquire.py --route bili --url 'https://www.bilibili.com/video/BV1CMMh62EVA/' --mode subtitles --data-root /absolute/path/to/materials
+python .agents/skills/vidtrail/scripts/acquire.py --route yt-dlp --url 'https://www.youtube.com/watch?v=3UgXWMQtB8E' --mode subtitles --data-root /absolute/path/to/materials
+```
+
+These URLs illustrate invocation, not current successful acquisitions. For necessary media, use the yt-dlp route with `--mode media`; ffmpeg is needed. See [Platforms](platforms.md) for part selection, failure guidance, Cookie-file format, partial reuse and metadata privacy. The helper does not generate notes or verify understanding.
 
 Python 3.10+ is required. requirements.txt pins the acquisition tool baseline. Media merging, audio/frame extraction need ffmpeg/ffprobe. Check yt-dlp's current [EJS guidance](https://github.com/yt-dlp/yt-dlp/wiki/EJS) for a supported JS runtime; do not assume a tool update preserves previous validation. Paths come from the current host/project, with acquisition data outside the distribution and notes at the user's chosen destination.
 

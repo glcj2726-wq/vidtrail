@@ -8,8 +8,8 @@ license: MIT
 
 Help the user discover useful videos, understand their content, and carry useful knowledge or methods into subsequent practice. Deliver learning notes, a faithful explanation of the creator's workflow, or both:
 
-- **Learning notes:** explain the central problem, necessary concepts, their relationships, the creator's example, and limitations.
-- **Creator workflow:** preserve prerequisites, inputs, concrete actions, dependencies, intermediate outputs, decisions, completion checks, and missing details.
+- **Learning notes:** help the reader understand the method: the concrete problem, necessary concepts, causal relationships, the creator's example, and conditions. Explain why an approach is needed and when a simpler one would suffice.
+- **Creator workflow:** show how work moves forward: prerequisites, inputs, concrete actions, dependencies, intermediate outputs, human decisions, completion checks, and missing details. Do not duplicate the full conceptual explanation when delivering both.
 
 Use a connected example rather than a disconnected list of timestamps. Follow the user's requested output language; otherwise use the current conversation's language. Preserve original commands, parameters, identifiers, and important technical terms. English instructions do not require English answers.
 
@@ -33,11 +33,11 @@ Read only the references needed for the current stage. The bundled `scripts/acqu
 
 1. Establish the question and deliverable: candidates, a focused answer, learning notes, a creator workflow, or both. A candidate-only request ends after candidate comparison, without fetching transcripts or media.
 2. Identify the platform ID and part/cid. Reuse verified materials and receipts in the current project or user-designated location. A new question about the same source needs new analysis, not another download.
-3. Obtain reliable text: existing full text first; otherwise platform captions, then an actually available browser transcript route. Attempt each route once for the same target. Consider media and an available, authorized transcription route only when needed. Stop acquisition when sufficient text is ready.
+3. Obtain reliable text: existing full text first; otherwise platform captions, then an actually available browser transcript route. Attempt each route once for the same target. Consider media and an available, authorized transcription route only when needed. Stop redundant text acquisition when sufficient text is ready. Explain failures from actual diagnostics, not a blanket request to log in; see Platforms.
 4. Read all available text for full-video distillation, in chronological chunks when necessary, and establish the structure and causal thread. A focused question can use a relevant excerpt plus context, with its limited scope stated.
-5. Check visuals where the conclusion depends on an interface action, code, command, parameter, formula, chart, prompt, or demonstrated result. Target actual evidence gaps; text coverage and visual coverage are separate.
+5. Check visuals where the conclusion depends on an interface action, code, command, parameter, formula, chart, prompt, or demonstrated result. Reuse existing images/media, then inspect the source page; use necessary local media for continuous actions or changes a still cannot explain. Keep readable screenshots with source times, and clickable video-time links beside important claims/steps. Text coverage and visual coverage are separate.
 6. Explain the material for the user's goal. Keep the creator's example and distinguish your illustrative additions. Use Teaching for learning notes and Distillation for workflow explanations.
-7. Deliver to the user's chosen destination or the current project's established location. If neither is specified, answer in the conversation and suggest where it could be saved. Do not require a new knowledge base, catalog, or directory hierarchy.
+7. Deliver to the user's chosen destination or the current project's established location. If neither is specified, answer in the conversation and suggest where it could be saved. Write for the reader: one short shared coverage note, specific local gaps, and an optional separate verification report rather than repeated audit disclaimers. Do not require a new knowledge base, catalog, or directory hierarchy.
 
 ## Evidence and boundaries
 

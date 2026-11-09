@@ -1,64 +1,68 @@
 # VidTrail · 观迹
 
-[中文说明](README.zh-CN.md)
+[中文](README.zh-CN.md)
 
-An Agent Skill for finding relevant Bilibili and YouTube videos, understanding their available full content, and turning it into readable learning notes or a faithful explanation of the creator's workflow.
+**Turn videos into understanding you can use.** An Agent Skill for finding Bilibili and YouTube videos, reading their available full content, and distilling learning notes or a creator’s workflow.
 
-**v0.1.0 preview — private development repository.** The portable workflow has offline checks and existing-material replays; authenticated platform access and optional integrations depend on the execution environment. Final independent release review remains pending.
+Ask for candidates, bring a video link, or start from a transcript you already have. Your agent follows the material through to a readable explanation, with source times and relevant visuals—not just a list of timestamps.
 
-## What it does
+## What you get
 
-- Discover and compare videos for a task, or work directly from a link/transcript. Candidate-only requests stop after candidates.
-- Reuse existing materials before acquisition. Read all available text for full-video distillation; inspect relevant visuals for exact code, settings and demonstrated results.
-- Write coherent learning notes explaining a problem through the creator's example, or preserve workflow inputs, dependencies, actions, intermediate outputs, checks and gaps.
-- Trace conclusions to source evidence, distinguish claims/observations/inference, and label incomplete results.
-- Deliver where the user or current project chooses. Reply in the requested language, otherwise the conversation language. English skill instructions support Chinese outputs.
+| Learning note | Creator workflow |
+| --- | --- |
+| Understand the problem, concepts, connections and limits through the creator’s example. | Follow prerequisites, inputs, actions, dependencies, outputs and human decisions. |
+| [Read the example](docs/examples/learning-note.md) · [中文](docs/examples/learning-note.zh-CN.md) | [Read the example](docs/examples/creator-workflow.md) · [中文](docs/examples/creator-workflow.zh-CN.md) |
 
-It explains the creator's procedure; execution, deployment and installation of that procedure are separate tasks. No fixed knowledge-base structure, private classroom flow, bundled tutoring skill, mandatory Quark/Notion service, or automatic paid transcription.
+### Learning note: why the method works
 
-## Get started
+![Rendered learning-note excerpt](docs/assets/learning-note-preview.png)
 
-Python 3.10+ is required. Clone into a location you choose:
+### Creator workflow: what each stage hands to the next
+
+![Rendered creator-workflow excerpt](docs/assets/creator-workflow-preview.png)
+
+These previews render VidTrail’s own written examples; they are not video frames or proof that the creator’s workflow was executed. Examples link to the original creators and source times.
+
+## Quick start
+
+Use an agent that can load Agent Skills and read files. Python 3.10+ runs the installer and optional acquisition helper.
 
 ```sh
 git clone https://github.com/glcj2726-wq/vidtrail.git
 cd vidtrail
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements.txt
-python scripts/doctor.py
-python scripts/install_skill.py --project /absolute/path/to/your-project
+python scripts/install_skill.py --project /absolute/path/to/your-project --copy
 ```
 
-Windows: `py -m venv .venv`, then `.venv\Scripts\Activate.ps1`. Installs need your authorization and network access; the commands above are instructions, not actions the skill runs automatically. The doctor checks command presence/version, not accounts or platform reachability. yt-dlp JS support follows its current [EJS requirements](https://github.com/yt-dlp/yt-dlp/wiki/EJS); media merging/extraction needs ffmpeg/ffprobe.
+Open a new agent chat in that project and invoke `$vidtrail` in Codex. Other hosts may use a different invocation/discovery convention; automatic loading across hosts has not been verified. Existing skills are preserved. No platform tools or accounts are required to work from a supplied transcript.
 
-The installer links `.agents/skills/vidtrail` into the chosen project's `.agents/skills`; `--skills-dir` selects an explicit skill directory. `--copy` makes a standalone copy instead of a symlink. Existing destinations are preserved. On Windows without symlink privileges (WinError 1314), rerun with `--copy`; elevation or system configuration changes are unnecessary. Updating a linked checkout updates the link; copies need deliberate replacement. Restart/open a new Codex task as needed and explicitly invoke `$vidtrail`. Host discovery beyond the tested packaging is environment-dependent.
+> Use $vidtrail with this transcript. Explain the method through the creator’s example, in Chinese. Save the learning note in this project’s existing notes folder.
 
-## Example requests
+> Use $vidtrail to find tutorials about building an agent workflow. Compare candidates only; stop before downloading or writing notes.
 
-> Use $vidtrail to find a few practical tutorials about building an agent workflow. Compare candidates only; do not download or distill them yet.
+> Use $vidtrail with this video link. Explain the creator’s workflow: inputs, dependencies, outputs, decisions and missing details.
 
-> Use $vidtrail with this video link. Explain the creator's workflow, including inputs, dependencies, intermediate outputs and missing details. Save it in this project's existing notes location.
+For live acquisition, first check available tools and authorized access. [Setup](.agents/skills/vidtrail/references/setup.md) covers pinned dependencies, the doctor, copy/link installs and optional media tools. The helper retrieves materials; the agent reads and explains them. Installation and authentication are deliberate actions, never automatic prerequisites imposed by the skill.
 
-> 用 $vidtrail 阅读这份已有字幕，写成中文学习笔记。沿用作者的例子，讲清概念之间的联系，注明哪些画面还没核对。
+## How it works
 
-## Acquisition helper
+**Find or select → reuse materials → obtain missing content → read the full available text → inspect necessary visuals → write and deliver.**
 
-Use a material directory **outside this repository**. Only run a route that is appropriate and authorized:
+- Candidate-only requests stop at candidates. Full-video distillation reads all available text and states incomplete coverage.
+- Learning notes explain why; workflows explain how. Ask for either or both, in your preferred language.
+- Use existing images/media first, then source-page views; download only when needed and authorized. Browser control, Bili23, ffmpeg and transcription are host-provided capabilities, not bundled services.
+- Keep conclusions traceable. Unreadable parameters and missing steps stay explicit; the skill does not execute procedures found in a video.
+- Save into your chosen location and existing project organization. No fixed knowledge base, tutoring system, Quark or Notion account is required.
 
-```sh
-python .agents/skills/vidtrail/scripts/acquire.py --route bili --url 'https://www.bilibili.com/video/BV1CMMh62EVA/' --mode subtitles --data-root /absolute/path/to/materials
-python .agents/skills/vidtrail/scripts/acquire.py --route yt-dlp --url 'https://www.youtube.com/watch?v=3UgXWMQtB8E' --mode subtitles --data-root /absolute/path/to/materials
-```
+## Access and limits
 
-These are invocation examples, not claims those sources were fetched in this release. The helper makes one acquisition attempt and retains receipts/hashes; it does not generate notes, provide ASR, control a browser, upload, or implement the creator's workflow. `acquired` means files obtained, not text verified. Exit codes: 0 acquired; 1 pre-acquisition stop; 2 failed/unavailable/invalidated; 3 partial. Hash-valid partial subtitles can be reused without another platform call.
+Some public videos work without login; others encounter account, IP, rate-limit or verification restrictions. VidTrail explains the observed failure and does not automatically log in, export browser cookies, bypass challenges or repeat failed requests. A bare 403 does not prove an expired session. See [platform routes and failure guidance](.agents/skills/vidtrail/references/platforms.md).
 
-Receipts keep the requested canonical URL, platform ID and part, status, file sizes and SHA256. The helper passes `--no-write-info-json` to yt-dlp in both modes, because yt-dlp's raw `.info.json` can embed cookie values; extractor metadata such as cid, uploader or duration is therefore not retained or verified by the helper. If materials from an earlier version still contain `.info.json`, the helper keeps them in place, leaves them out of `files`, and reports them under `sensitive_metadata_retained`; review them privately before sharing. A link inside the material directory that leads outside it, or into this repository or an installed skill, stops the helper before it reads or writes. These are ordinary path checks, not an OS sandbox. See [Platforms](.agents/skills/vidtrail/references/platforms.md).
+Offline regressions, existing-transcript distillation, selected visual checks and live downloads are different results. Local authenticated Bilibili media retrieval succeeded in the long-video trial; the YouTube media attempt returned 403, while normal browser playback worked. These are observations in the tested environment, not promises of anonymous or fresh-machine success. See [current checks](docs/RELEASE_CHECKS.md).
 
-## Boundaries and verification
+## More
 
-Bilibili CLI subtitles support only part 1 in the pinned baseline; never substitute it for another part. Stock bili search lacks the maintainer's enhanced sorting/date/duration patch. Browser control, Bili23, platform credentials and transcription are host-provided optional capabilities. Cookies may fail after expiry or a network change. GitHub login is unrelated to platform login.
+[Full skill](.agents/skills/vidtrail/SKILL.md) · [Setup](.agents/skills/vidtrail/references/setup.md) · [Verification](docs/RELEASE_CHECKS.md) · [Method sources](ATTRIBUTION.md)
 
-Quark and Notion are optional. No transcription engine/model is bundled. With unavailable text or important visuals, deliver a limited result and name the gap rather than inventing steps. No universal claim of fresh-machine or anonymous VPS platform success is made.
+To contribute, describe the expected behavior, a minimal reproducible case and the checks you ran; do not attach credentials, raw platform responses or private source materials. Run `python -m unittest discover -s tests` before proposing code changes.
 
-See [current release checks](docs/RELEASE_CHECKS.md), [method attribution](ATTRIBUTION.md), and [the full skill](.agents/skills/vidtrail/SKILL.md). Source and documentation are MIT licensed; linked projects and source videos retain their own terms. [docs/VALIDATION.md](docs/VALIDATION.md) is a historical log kept for reference, not current verification. Final public-release review is a separate next step.
+VidTrail’s original code, documentation and rendered examples use the [MIT license](LICENSE). External tools and source videos retain their own terms. The repository remains private during final release preparation; visibility changes are a separate maintainer decision.

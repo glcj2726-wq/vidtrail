@@ -168,10 +168,12 @@ class BiliSchemaTests(Workspace):
                 self.assertEqual(receipt["diagnostic"], diagnostic)
                 self.assertEqual(receipt["reason"], "no_usable_target_or_command_failed")
                 self.assertEqual(receipt["exit_code"], 0)
-                saved = Path(receipt["files"][0]["path"])
-                self.assertEqual(saved.read_text(encoding="utf-8"), stdout)
-                on_disk = json.loads((saved.parents[1] / "receipt.json").read_text(encoding="utf-8"))
-                self.assertEqual(on_disk["diagnostic"], diagnostic)
+                # Failed/malformed responses are diagnostics, not subtitle content.
+                # Preserve the fixed diagnostic and status without retaining raw data.
+                self.assertEqual(receipt["files"], [])
+                self.assertFalse(list(data.rglob('bili-response.json')))
+                for path in data.rglob('receipt.json'):
+                    self.assertEqual(json.loads(path.read_text(encoding='utf-8'))['diagnostic'], diagnostic)
 
     def test_failed_payload_is_reused_without_another_call(self):
         self.result(self.bili("null"), 2)
