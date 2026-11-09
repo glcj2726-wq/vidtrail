@@ -1,25 +1,31 @@
-# 读书笔记怎样变成可以继续使用的想法
+# 一本书的笔记，为什么同时保留PDF和Markdown
 
-[English](learning-note.md) · 学习笔记示例
+[English](learning-note.md)
 
-来源：Mike Schmitz，[How I Built the Ultimate Book Notes Library in Obsidian](https://www.youtube.com/watch?v=P57Bg5yIkdA)，26:59。根据完整可用字幕及选定画面作简短解释，不是书库复刻或完整配置教程。
+Mike Schmitz希望读书笔记能在以后创作时派上用场。他在[这条Obsidian书库视频](https://www.youtube.com/watch?v=P57Bg5yIkdA)里，介绍一本书怎样从阅读记录变成可以回看、可以与其他想法关联的笔记。本例依据完整可用字幕和选定画面整理。
 
-## 先知道为什么记，书库才有用途
+## 两个文件各有用处
 
-作者希望读书笔记参与后续创作。他围绕好奇心和当前问题选书，留下能引发回应的内容，而不是尽量抄下所有看似重要的话。这样，书库的用途便是有事可做时找回想法。[01:56–04:45](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=116s)、[09:08–11:34](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=548s)。
+读书时，作者用导图记录章节、选出的内容和图片。读完后，他把同一份导图导出为PDF和Markdown。PDF保留布局与图片，Markdown留下可以继续编辑的大纲，却不保留那些图片。两份文件因此各有用途。[13分26秒至16分17秒](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=806s)。
 
-可以据此区分：存下信息保留了访问机会，选择和连接保留了自己的理解。封面能帮助识别一本书，却不能替自己判断其中的观点为什么重要。
+[![我们绘制的两种导出格式及其在单书笔记中的用途](../assets/book-note-exports.zh-CN.svg)](../assets/book-note-exports.zh-CN.svg)
 
-## 两种导出，各自保留一种用途
+*我们依据作者[15分46秒至17分](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=946s)的说明绘制这张解释图，图中内容为方法整理。*
 
-导图保留章节结构、选出的观察和图片。读完后，PDF保留视觉布局与图片，Markdown提供可编辑文字，却不会保留这些图片。它们是同一次阅读的两种互补表达。[13:26–16:17](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=806s)。
+进入单书笔记后，作者自己写三句总结，嵌入PDF，再粘贴Markdown大纲。总结表达自己的理解，PDF保留视觉材料，大纲则方便继续加工。如果你的笔记没有需要保留的图片或布局，可以再判断是否需要两种导出。最后这个取舍建议是本文的归纳。[16分17秒至17分](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=977s)。
 
-单书笔记用三句总结表达自己的理解，嵌入PDF保留导图，再加工文字大纲。当视觉语境和可编辑文字都重要时，双份才有意义；不是要求所有笔记都重复保存。[16:17–17:00](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=977s)。
+## 文字大纲可以继续参与其他问题
 
-## 建立连接，让笔记跨出单本书
+作者把概念链接到独立笔记，给引文加上作者链接和`#quote`，给行动项加上`#todo`。每本书保留自己的语境，其中的想法又能与其他材料关联。[17分至18分30秒](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=1020s)。
 
-概念链接让不同书里的想法相遇，各本书仍保留各自语境；引文和行动项也有不同去向。变化在于，笔记能参与下一次问题，而不只是躺在文件夹里。[17:00–18:30](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=1020s)。
+这些关联依赖阅读时的选择。他围绕好奇心和当前问题选书，记录能引发回应的内容。以后回看，便更容易说明自己为什么记下这一段。[1分56秒至4分45秒](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=116s)、[9分8秒至11分34秒](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=548s)。
 
-Book Search先创建带模板和元数据的书笔记，作者再嵌入PDF、粘贴Markdown并整理关联。之后Bases提供同一批笔记的不同视图，五星视图不需要再复制一套笔记。[20:32–21:25](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=1232s)、[21:25–24:16](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=1285s)。
+## 属性让同一批笔记更容易找到
 
-本文将可迁移的方法概括为“选择→保留→连接→再用”。这是我们的归纳。完整插件设置、模板和查询没有全部取得；理解方法也不代表已经搭建或使用书库。字幕末句不完整，片尾产品推广不是安装前提。
+Book Search先创建带模板和元数据的笔记，作者再放入PDF、大纲并整理链接。之后，Bases提供普通卡片、五星书等不同视图，同一份笔记可以从不同入口找到。[20分32秒至21分25秒](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=1232s)、[21分25秒至24分16秒](https://www.youtube.com/watch?v=P57Bg5yIkdA&t=1285s)。
+
+本文认为，这套方法值得借鉴的地方，是先把材料保留成可以继续加工的形式，再建立有意义的关联。完整搭建书库，还需要实际模板、插件设置与查询。
+
+### 来源与阅读范围
+
+作者为Mike Schmitz，视频长26分59秒。现有英文字幕覆盖完整可用正文，末句不完整。本例补看了选定画面，尚未部署其书库或执行作者流程。片尾介绍的产品不构成学习这套方法的购买前提。

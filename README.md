@@ -1,31 +1,36 @@
+![VidTrail · 观迹, from video to notes and workflows](docs/assets/vidtrail-paper.webp)
+
 # VidTrail · 观迹
 
 [中文](README.zh-CN.md)
 
-**Turn videos into understanding you can use.** An Agent Skill for finding Bilibili and YouTube videos, reading their available full content, and distilling learning notes or a creator’s workflow.
+Let your agent find useful Bilibili and YouTube videos, then turn their available content into clear learning notes or a guide to the creator’s process. Start with a topic, a link or a transcript you already have.
 
-Ask for candidates, bring a video link, or start from a transcript you already have. Your agent follows the material through to a readable explanation, with source times and relevant visuals—not just a list of timestamps.
+## See what you can get
 
-## What you get
+### Understand a method
 
-| Learning note | Creator workflow |
-| --- | --- |
-| Understand the problem, concepts, connections and limits through the creator’s example. | Follow prerequisites, inputs, actions, dependencies, outputs and human decisions. |
-| [Read the example](docs/examples/learning-note.md) · [中文](docs/examples/learning-note.zh-CN.md) | [Read the example](docs/examples/creator-workflow.md) · [中文](docs/examples/creator-workflow.zh-CN.md) |
+> Use $vidtrail to explain why this Obsidian book-note workflow keeps both PDF and Markdown. Write a learning note using the creator’s example.
 
-### Learning note: why the method works
+[![A real browser rendering of the learning-note example](docs/assets/learning-note-preview.png)](docs/assets/learning-note-preview.png)
 
-![Rendered learning-note excerpt](docs/assets/learning-note-preview.png)
+The note connects the format choices to their later use. The diagram is our explanation of the source, and the full example keeps the relevant video times.
 
-### Creator workflow: what each stage hands to the next
+[Read the learning note](docs/examples/learning-note.md) · [中文](docs/examples/learning-note.zh-CN.md)
 
-![Rendered creator-workflow excerpt](docs/assets/creator-workflow-preview.png)
+### Follow the creator’s process
 
-These previews render VidTrail’s own written examples; they are not video frames or proof that the creator’s workflow was executed. Examples link to the original creators and source times.
+> Use $vidtrail to explain how plotome moves a long animation from script to release. Show what each stage needs, produces and leaves for a human to decide.
 
-## Quick start
+[![A real browser rendering of the creator-workflow example](docs/assets/creator-workflow-preview.png)](docs/assets/creator-workflow-preview.png)
 
-Use an agent that can load Agent Skills and read files. Python 3.10+ runs the installer and optional acquisition helper.
+The workflow follows handoffs and review points, with missing implementation details kept explicit. It describes the creator’s work; it does not run the production process.
+
+[Read the creator workflow](docs/examples/creator-workflow.md) · [中文](docs/examples/creator-workflow.zh-CN.md)
+
+## Install and try it
+
+Use an agent that loads Agent Skills and can read files. Python 3.10+ runs the installer and optional acquisition helper.
 
 ```sh
 git clone https://github.com/glcj2726-wq/vidtrail.git
@@ -33,36 +38,28 @@ cd vidtrail
 python scripts/install_skill.py --project /absolute/path/to/your-project --copy
 ```
 
-Open a new agent chat in that project and invoke `$vidtrail` in Codex. Other hosts may use a different invocation/discovery convention; automatic loading across hosts has not been verified. Existing skills are preserved. No platform tools or accounts are required to work from a supplied transcript.
+Open a new chat in the target project. Codex can invoke the skill with `$vidtrail`; other hosts follow their own discovery and invocation conventions. Existing skills are preserved.
 
-> Use $vidtrail with this transcript. Explain the method through the creator’s example, in Chinese. Save the learning note in this project’s existing notes folder.
+With a transcript you already have:
 
-> Use $vidtrail to find tutorials about building an agent workflow. Compare candidates only; stop before downloading or writing notes.
+> Use $vidtrail with this transcript. Write learning notes in Chinese and save them in this project’s existing notes folder.
 
-> Use $vidtrail with this video link. Explain the creator’s workflow: inputs, dependencies, outputs, decisions and missing details.
+With a video link:
 
-For live acquisition, first check available tools and authorized access. [Setup](.agents/skills/vidtrail/references/setup.md) covers pinned dependencies, the doctor, copy/link installs and optional media tools. The helper retrieves materials; the agent reads and explains them. Installation and authentication are deliberate actions, never automatic prerequisites imposed by the skill.
+> Use $vidtrail with this video link. Explain the creator’s workflow and include source times for important steps.
 
-## How it works
+Supplied transcripts do not require platform login or download tools. For live acquisition, check the [setup guide](.agents/skills/vidtrail/references/setup.md) for available tools and authorized access. If you only want candidate videos, say so and the skill stops after comparison.
 
-**Find or select → reuse materials → obtain missing content → read the full available text → inspect necessary visuals → write and deliver.**
+## From source to result
 
-- Candidate-only requests stop at candidates. Full-video distillation reads all available text and states incomplete coverage.
-- Learning notes explain why; workflows explain how. Ask for either or both, in your preferred language.
-- Use existing images/media first, then source-page views; download only when needed and authorized. Browser control, Bili23, ffmpeg and transcription are host-provided capabilities, not bundled services.
-- Keep conclusions traceable. Unreadable parameters and missing steps stay explicit; the skill does not execute procedures found in a video.
-- Save into your chosen location and existing project organization. No fixed knowledge base, tutoring system, Quark or Notion account is required.
+**Find or select → reuse materials → obtain missing text → read the available full content → check necessary visuals → write and deliver.**
 
-## Access and limits
+Ask for learning notes, a creator workflow or both, in your preferred language. Deliver into your chosen location. Downloads and transcription are optional routes when needed and authorized; Quark, Notion and a separate tutoring skill are not required.
 
-Some public videos work without login; others encounter account, IP, rate-limit or verification restrictions. VidTrail explains the observed failure and does not automatically log in, export browser cookies, bypass challenges or repeat failed requests. A bare 403 does not prove an expired session. See [platform routes and failure guidance](.agents/skills/vidtrail/references/platforms.md).
+## Before you rely on a result
 
-Offline regressions, existing-transcript distillation, selected visual checks and live downloads are different results. Local authenticated Bilibili media retrieval succeeded in the long-video trial; the YouTube media attempt returned 403, while normal browser playback worked. These are observations in the tested environment, not promises of anonymous or fresh-machine success. See [current checks](docs/RELEASE_CHECKS.md).
+Platform access varies with the source, network and account. A failed request can leave a useful transcript available; incomplete text or unreadable visuals limit what the result can establish. VidTrail explains the gap and does not invent missing steps or automatically log in and retry. See [platform guidance](.agents/skills/vidtrail/references/platforms.md) and [actual checks and limits](docs/RELEASE_CHECKS.md).
 
-## More
+[Full skill](.agents/skills/vidtrail/SKILL.md) · [Method sources](ATTRIBUTION.md) · [MIT license](LICENSE)
 
-[Full skill](.agents/skills/vidtrail/SKILL.md) · [Setup](.agents/skills/vidtrail/references/setup.md) · [Verification](docs/RELEASE_CHECKS.md) · [Method sources](ATTRIBUTION.md)
-
-To contribute, describe the expected behavior, a minimal reproducible case and the checks you ran; do not attach credentials, raw platform responses or private source materials. Run `python -m unittest discover -s tests` before proposing code changes.
-
-VidTrail’s original code, documentation and rendered examples use the [MIT license](LICENSE). External tools and source videos retain their own terms. The repository remains private during final release preparation; visibility changes are a separate maintainer decision.
+For feedback, describe what you asked for, what happened and a minimal reproducible case. Keep credentials and private source materials out of reports. External tools and source videos retain their own terms. The repository remains private during release preparation.

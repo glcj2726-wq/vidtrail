@@ -101,3 +101,10 @@ No optional integration, live platform operation, automatic host discovery, or s
 - The maintainer's enhanced bili search, local authentication automation and transcription wrapper are not bundled. Private classroom workflows are excluded.
 - History includes earlier scope and verification records. Those records are historical, not current capability claims. Final review must cover the exact pushed commit and public-facing content before visibility changes.
 - VidTrail is a project name, not a claim of a globally unique brand or an available domain.
+
+
+## README and example presentation refresh (2026-11-10)
+
+The documentation-only update on 93339fc adds the selected paper-cut banner, four original bilingual diagrams and four actual browser screenshots of the public examples. Each homepage shows both deliverable types, with one request and a full-example link for each. Images open at full size. English/Chinese desktop and narrow-screen layouts, source-time/relative links and final saved assets were checked. Headline prose and examples were edited for clarity while retaining source attribution and material limits.
+
+All acquisition/skill code, pins and test files retain the previous verified hashes. The 83-test Linux result above is reused, not rerun. No new source-video frame is distributed, no platform request or login occurred, and the repository remains private. This presentation check used local Markdown rendering; the exact pushed files and private status are independently read back from GitHub.

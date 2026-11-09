@@ -1,27 +1,36 @@
+![观迹 · VidTrail，将视频内容整理成笔记与工作流](docs/assets/vidtrail-paper.webp)
+
 # 观迹 · VidTrail
 
 [English](README.md)
 
-**把视频变成能理解、能借鉴的知识。** 让 Agent 帮你找 B站和 YouTube 视频，读懂完整可用内容，整理成学习笔记或作者工作流。
+让Agent帮你找B站和YouTube视频，整理成讲得明白的学习笔记或作者工作流。可以从一个主题开始，也可以直接给链接或已有字幕。
 
-可以只找候选，也可以提供链接或已有字幕。成果沿作者的例子讲清方法，保留来源定位和必要画面，方便回看与实践。
+## 先看看能得到什么
 
-## 能得到什么
+### 把方法读明白
 
-| 学习笔记 | 作者工作流 |
-| --- | --- |
-| 讲清问题、概念联系、为什么这样做和适用边界。 | 说明前提、输入、行动、步骤依赖、中间产物和人工判断。 |
-| [查看中文示例](docs/examples/learning-note.zh-CN.md) · [English](docs/examples/learning-note.md) | [查看中文示例](docs/examples/creator-workflow.zh-CN.md) · [English](docs/examples/creator-workflow.md) |
+> 用 $vidtrail 解释这套Obsidian书籍笔记为什么同时保留PDF和Markdown。沿作者的例子，写成学习笔记。
 
-![学习笔记的英文示例渲染](docs/assets/learning-note-preview.png)
+[![学习笔记示例页面的实际浏览器截图](docs/assets/learning-note-preview.zh-CN.png)](docs/assets/learning-note-preview.zh-CN.png)
 
-![作者工作流的英文示例渲染](docs/assets/creator-workflow-preview.png)
+笔记把格式选择和后续用途连起来讲，解释图由我们依据来源绘制。完整示例保留原片时间，方便回看。
 
-配图是我们自己所写示例的实际渲染，不是原视频截图，也不代表执行过作者的方法。示例保留作者署名和视频时间链接。
+[阅读学习笔记](docs/examples/learning-note.zh-CN.md) · [English](docs/examples/learning-note.md)
 
-## 开始使用
+### 看清作者怎样一步步做
 
-需要能加载 Agent Skills、读取文件的 Agent；安装程序和可选获取脚本使用 Python 3.10+。
+> 用 $vidtrail 整理plotome制作长篇动画的流程，说明每一步拿到什么、交出什么，以及哪些地方由作者判断。
+
+[![作者工作流示例页面的实际浏览器截图](docs/assets/creator-workflow-preview.zh-CN.png)](docs/assets/creator-workflow-preview.zh-CN.png)
+
+工作流说明材料怎样交接、作者在哪里检查，并交代缺少的实现细节。这份示例解释作者的做法，制作过程未实际执行。
+
+[阅读作者工作流](docs/examples/creator-workflow.zh-CN.md) · [English](docs/examples/creator-workflow.md)
+
+## 安装后试一下
+
+需要能加载Agent Skills并读取文件的Agent。安装程序和可选获取脚本使用Python 3.10及以上版本。
 
 ```sh
 git clone https://github.com/glcj2726-wq/vidtrail.git
@@ -29,36 +38,28 @@ cd vidtrail
 python scripts/install_skill.py --project /你的项目绝对路径 --copy
 ```
 
-在目标项目新开聊天，Codex 中可用 `$vidtrail` 调用。其他宿主的加载与调用方式以其实际支持为准；尚未验证所有 Agent 的自动识别。安装保留已有技能。提供已有字幕时，不需要先安装平台工具或登录账号。
+在目标项目新开聊天。Codex中可以用`$vidtrail`调用，其他宿主按实际支持的加载方式使用。安装会保留已有技能。
 
-> 用 $vidtrail 读这份字幕，沿作者的例子写中文学习笔记，讲清概念联系，保存到项目已有笔记目录。
+手头已经有字幕时，可以这样说。
 
-> 用 $vidtrail 找几条搭建 Agent 工作流的教程，只比较候选，先不下载、不写笔记。
+> 用 $vidtrail 读这份字幕，写中文学习笔记，保存到项目已有的笔记目录。
 
-> 用 $vidtrail 整理这个视频的作者工作流，说明输入、依赖、中间结果、人工决策和缺失步骤。
+给视频链接时，可以这样说。
 
-在线获取前检查实际工具和已有授权。[配置说明](.agents/skills/vidtrail/references/setup.md)介绍固定依赖、环境检查、复制/链接安装与可选媒体工具。获取脚本负责拿材料，Agent负责阅读和解释；技能不自动安装或登录。
+> 用 $vidtrail 整理这个视频的作者工作流，给关键步骤加上原片时间。
 
-## 完整流程
+使用已有字幕不需要先登录平台或安装下载器。需要在线获取时，按[配置说明](.agents/skills/vidtrail/references/setup.md)检查实际工具与授权。只想找几条候选视频，也可以直接说明，技能会止于比较。
 
-**寻找或选定 → 复用材料 → 获取缺失正文 → 阅读全部可用内容 → 核对必要画面 → 写作并交付。**
+## 从材料到成果
 
-- 只要候选就止于候选；完整蒸馏读取全部可用正文，材料不全则限定结论。
-- 学习笔记说明“为什么”，工作流说明“如何衔接行动”；可以分别交付，也可同时交付，语言跟随用户要求。
-- 先用已有图片或媒体，再查网页画面，必要且获授权时才下载。浏览器、Bili23、ffmpeg和转写工具由实际环境提供。
-- 关键结论保留定位。看不清的参数、缺失的步骤不补造，也不自动执行视频里的操作。
-- 沿用你指定的位置和项目组织，不强制新建知识库，不捆绑带学、夸克或Notion流程。
+**寻找或选定 → 复用已有材料 → 获取缺失正文 → 阅读全部可用内容 → 核对必要画面 → 写作并交付。**
 
-## 登录与能力边界
+可以只写学习笔记，也可以整理作者工作流，两份都要也行。用什么语言、存到哪里，都按你的要求来。需要下载或转写时，再使用你允许的工具，无须绑定夸克、Notion或另一套带学技能。
 
-公开视频不一定都需要登录，也不保证匿名可抓取。账号、IP、限流和访问验证均可能影响结果。技能解释观察到的原因，不自动登录、导出浏览器Cookie、绕过验证或反复请求。只有403，不能断言登录过期。详见[平台路线与失败提醒](.agents/skills/vidtrail/references/platforms.md)。
+## 使用时留意材料范围
 
-离线测试、已有正文蒸馏、局部画面核查和真实下载分别报告。长视频试验中，本机已登录环境的B站媒体获取成功；YouTube媒体请求遇403，但正常浏览器能播放。这不代表匿名VPS或新机器同样成功。详见[当前验证](docs/RELEASE_CHECKS.md)。
+能否获取内容与视频、网络和账号有关。在线请求失败后，已有字幕仍可能足够继续整理；正文不全或关键画面看不清，会影响能得出哪些结论。VidTrail会说明具体缺口，不补造步骤，也不自动登录和重复请求。详见[平台说明](.agents/skills/vidtrail/references/platforms.md)和[实际验证结果](docs/RELEASE_CHECKS.md)。
 
-## 更多与反馈
+[完整技能](.agents/skills/vidtrail/SKILL.md) · [方法来源](ATTRIBUTION.md) · [MIT许可证](LICENSE)
 
-[完整技能](.agents/skills/vidtrail/SKILL.md) · [配置](.agents/skills/vidtrail/references/setup.md) · [验证结果](docs/RELEASE_CHECKS.md) · [方法来源](ATTRIBUTION.md)
-
-反馈问题请说明预期、最小复现和检查结果，不附凭据、平台原始错误包或私人材料。修改代码后运行 `python -m unittest discover -s tests`。
-
-原创代码、文档和示例渲染采用 [MIT](LICENSE)；外部工具和原视频保留各自条款。当前仍在私有仓库完成公开准备，实际公开另行决定。
+反馈时请说明你提出了什么要求、实际遇到什么情况，并给出能复现问题的最小材料。不要附凭据或私人原件。外部工具和原视频保留各自条款。仓库目前仍为私有，实际公开另行决定。
