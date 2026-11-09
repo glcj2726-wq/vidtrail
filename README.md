@@ -62,4 +62,4 @@ Platform access varies with the source, network and account. A failed request ca
 
 [Full skill](.agents/skills/vidtrail/SKILL.md) · [Method sources](ATTRIBUTION.md) · [MIT license](LICENSE)
 
-For feedback, describe what you asked for, what happened and a minimal reproducible case. Keep credentials and private source materials out of reports. External tools and source videos retain their own terms. The repository remains private during release preparation.
+For feedback, describe what you asked for, what happened and a minimal reproducible case. Keep credentials and private source materials out of reports. External tools and source videos retain their own terms.

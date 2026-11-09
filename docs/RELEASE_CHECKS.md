@@ -1,8 +1,16 @@
-# v0.1.0 private preview checks
+# Release checks
 
-This page gives the current private-update checks first and retains earlier implementation records below. It does not promise universal platform access. Making the repository public is a separate maintainer decision.
+This page records release verification and the earlier implementation history. Dated private/uncommitted statuses below describe their original stages; they are not live repository settings. Platform access still depends on the source, network and execution environment.
 
-## Current private update: reviewed fixes and public-facing examples (2026-11-09)
+## Pre-publication review (2026-11-10)
+
+The maintainer approved public release after reviewing the current source and reachable history. The pre-publication snapshot on `e787d37` contained 42 files, 8 commits and 109 distinct reachable blobs. Checks found no common credential/private-key patterns, personal machine paths, private contact details or real platform credentials. Git author/committer identities use the GitHub username and GitHub noreply address. All seven historical image versions match previously inspected original illustrations or rendered examples. These are bounded checks, not a guarantee against every possible sensitive string.
+
+The only advertised branch was `main`, with no tags, releases, issues/PRs, comments, Actions runs/artifacts or deployments; wiki, Pages and discussions were disabled. The current documentation was checked against the existing code and accepted cases. Stale private-only wording was removed from the homepages; the older records below are retained as history.
+
+No acquisition, dependency, test or installed-skill code changed. The earlier Linux 83-pass result is inherited, not rerun for this documentation-only review. There is no new platform-access, anonymous-VPS or creator-workflow execution claim. The visibility change is a separate GitHub operation after these checks; GitHub's current visibility is authoritative.
+
+## Historical: reviewed fixes and public-facing examples (2026-11-09)
 
 The update integrates the prior candidate on base `4738262` and resolves the verified review findings. Repository visibility stays private. No installed maintainer skill or original material was changed.
 
